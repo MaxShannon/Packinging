@@ -37,13 +37,17 @@ namespace Services
                    join cargoInfoes in _db.CargoInfoes on huom2.id equals cargoInfoes.Huom2Id
                        into cargoInfoesJoin
                    from cargoInfoes in cargoInfoesJoin.DefaultIfEmpty()
+                   join cargoHuotInfoes in _db.CargoHuotInfoes on new { CargoId = cargoInfoes.Id, HuotId = huot.id }
+                       equals new { CargoId = cargoHuotInfoes.CargoId, HuotId = cargoHuotInfoes.HuotId }
+                       into cargoHuotInfoesJoin
+                   from cargoHuotInfoes in cargoHuotInfoesJoin.DefaultIfEmpty()
                    select new CargoViewModel
                    {
                        TopCargoName = huom.name,
                        CargoName = huom2.name,
                        Huom2Id = huom2.id,
                        HuotName = huot.name,
-                       Weight = cargoInfoes == null ? 0 : cargoInfoes.Weight,
+                       Weight = cargoHuotInfoes == null ? 0 : cargoHuotInfoes.Weight,
                        FillList = sys_ry.lx == _lxId || sys_ry.lx == _lxId2, // 8,9 包装货台包装都可以
                        UserId = sys_ry.pk,
                        IsOk = huom2.sfyx == 1,
@@ -62,13 +66,17 @@ namespace Services
                     join cargoInfoes in _db.CargoInfoes on huom2.id equals cargoInfoes.Huom2Id
                         into cargoInfoesJoin
                     from cargoInfoes in cargoInfoesJoin.DefaultIfEmpty()
+                    join cargoHuotInfoes in _db.CargoHuotInfoes on new { CargoId = cargoInfoes.Id, HuotId = huot.id }
+                     equals new { CargoId = cargoHuotInfoes.CargoId, HuotId = cargoHuotInfoes.HuotId }
+                     into cargoHuotInfoesJoin
+                    from cargoHuotInfoes in cargoHuotInfoesJoin.DefaultIfEmpty()
                     select new CargoViewModel
                     {
                         TopCargoName = huom.name,
                         CargoName = huom2.name,
                         Huom2Id = huom2.id,
                         HuotName = huot.name,
-                        Weight = cargoInfoes == null ? 0 : cargoInfoes.Weight,
+                        Weight = cargoHuotInfoes == null ? 0 : cargoHuotInfoes.Weight,
                         FillList = sys_ry.lx == _lxId || sys_ry.lx == _lxId2, // 8,9 包装货台包装都可以
                         UserId = sys_ry.pk,
                         IsOk = huom2.sfyx == 1,
@@ -132,30 +140,33 @@ namespace Services
         {
             CheckCargo(huom2Id);
             var cargo = _db.CargoInfoes.First(c => c.Huom2Id == huom2Id);
-            CheckShipment(shipmentNo, cargo.Id);
-            var shipment = _db.ShipmentInfoes.First(a => a.ShipmentNo == shipmentNo);
-
-            var cargoLog = new CargoLogInfoes()
+            if (CheckShipment(shipmentNo, cargo.Id))
             {
-                ChangeWeight = changeWeight,
-                IsIncome = true,
-                InspectTime = DateTime.Now,
-                InspectName = inspectName,
-                StateId = 1,
-                Desc = StateEnum.正在审核.ToString(),//"等待审核",
-                CargoId = cargo.Id,
-                ShipmentId = shipment.Id,
-                HuotId = huotId,
-            };
-            _db.CargoLogInfoes.Add(cargoLog);
-            return _db.SaveChanges() > 0;
+                var shipment = _db.ShipmentInfoes.First(a => a.ShipmentNo == shipmentNo);
+
+                var cargoLog = new CargoLogInfoes()
+                {
+                    ChangeWeight = changeWeight,
+                    IsIncome = true,
+                    InspectTime = DateTime.Now,
+                    InspectName = inspectName,
+                    StateId = 1,
+                    Desc = StateEnum.正在审核.ToString(),//"等待审核",
+                    CargoId = cargo.Id,
+                    ShipmentId = shipment.Id,
+                    HuotId = huotId,
+                };
+                _db.CargoLogInfoes.Add(cargoLog);
+                return _db.SaveChanges() > 0;
+            }
+            return false;
         }
 
-        private void CheckShipment(string shipmentNo, int cargoId)
+        private bool CheckShipment(string shipmentNo, int cargoId)
         {
             var cargoName = _db.CargoInfoes.Find(cargoId);
             var shipment = _db.ShipmentInfoes.FirstOrDefault(a => a.ShipmentNo == shipmentNo);
-            if (shipment == null || shipment.Weight == 0)
+            if (shipment == null)
             {
                 // create
                 var newShipment = new ShipmentInfoes();
@@ -164,9 +175,16 @@ namespace Services
                 newShipment.Weight = 0;
                 newShipment.CargoName = cargoName.CargoName;
                 _db.ShipmentInfoes.Add(newShipment);
-                _db.SaveChanges();
+                return _db.SaveChanges() > 0;
             }
-
+            else if (shipment.CargoId == cargoId)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public bool AddCargoShipLog(int huom2Id, int huotId, int shipmentId, decimal changeWeight, int cargoInId, string inspectName)
@@ -297,6 +315,17 @@ namespace Services
             //_db.Entry(cargoLog).Property(c => c.StateId).IsModified = true;
             return _db.SaveChanges() > 0;
 
+        }
+
+        public IEnumerable<CargoViewModel> GetShipment(int huom2Id)
+        {
+            var cargo = _db.CargoInfoes.FirstOrDefault(a => a.Huom2Id == huom2Id);
+            var shipmentList = _db.ShipmentInfoes.Where(a => a.CargoId == cargo.Id).Select(a => new CargoViewModel
+            {
+                ShipmentId = a.Id,
+                ShipmentNo = a.ShipmentNo
+            }).ToList();
+            return shipmentList;
         }
 
         public bool RejectCargoLog(int id)
@@ -643,17 +672,17 @@ namespace Services
                 }
                 else
                 {
-                      temp = (
-                    from sys_ry in _db.sys_ry
-                    join huot in _db.huot on sys_ry.htid equals huot.id
-                    select new CargoViewModel
-                    {
-                        HuotId = huot.id,
-                        HuotName = huot.name,
-                        UserId = sys_ry.pk
-                    });
+                    temp = (
+                  from sys_ry in _db.sys_ry
+                  join huot in _db.huot on sys_ry.htid equals huot.id
+                  select new CargoViewModel
+                  {
+                      HuotId = huot.id,
+                      HuotName = huot.name,
+                      UserId = sys_ry.pk
+                  });
                 }
-              
+
             }
             else
             {

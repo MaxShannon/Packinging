@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "Select";
+    //Layout = null;
+}
+
+@section Scripts {
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/moment-with-locales.js"></script>
+
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+    <script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+
+    <script src="~/Scripts/bootstrap-table.js"></script>
+    <link href="~/Content/bootstrap-table.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap-table-zh-CN.js"></script>
+}
+
+
+
+<style type="text/css">
+    .form-control {
+        width:auto
+    }
+</style>
+<div class="form-group">
+    <div class="input-group col-xs-12">
+        <div class="input-group-btn">
+            <select name="type" class="form-control" style="width: auto;">
+                <option value="1">全网</option>
+                <option value="2">本站</option>
+            </select>
+        </div>
+        <input type="text" name="keyword" id="keyword" class="form-control" placeholder="请您输入关键词">
+        <span class="input-group-btn">
+            <button class="btn btn-success" id="search_submit" type="submit">Go</button>
+        </span>
+    </div>
+</div>

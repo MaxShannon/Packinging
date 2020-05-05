@@ -30,5 +30,10 @@ namespace Packing.Controllers
 
             return View();
         }
+
+        public ActionResult Select()
+        {
+            return View();
+        }
     }
 }

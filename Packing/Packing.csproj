@@ -276,6 +276,7 @@
     <Content Include="Views\Cargo\Audit.cshtml" />
     <Content Include="Views\Cargo\ShipOrder.cshtml" />
     <Content Include="Views\Cargo\CargoOutOrderConfirm.cshtml" />
+    <Content Include="Views\Home\Select.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

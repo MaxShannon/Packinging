@@ -278,8 +278,10 @@ namespace Packing.Controllers
                 //CatId = cargo.CatId1,
                 //CargoAreaId = cargoAreaId ?? 0
             };
+            var shipmentList = _cargoService.GetShipment(id);
             var huotList = _cargoService.GetUserHuot(LoginUser.pk);
             ViewBag.HuotName = new SelectList(huotList, "HuotId", "HuotName", 1);
+            ViewBag.ShipmentName = new SelectList(shipmentList, "ShipmentId", "ShipmentNo", 1);
             //ViewBag.CargoInName = new SelectList(_db.CargoInInfo, "Id", "CargoInName", 3);
             return View(model);
         }
@@ -301,7 +303,7 @@ namespace Packing.Controllers
             }
             bool ok = _cargoService.AddCargoComeLog(cargoViewModel.Huom2Id, cargoViewModel.HuotId, cargoViewModel.ShipmentNo, cargoViewModel.ChangeWeight, LoginUser.name);
 
-            return ok ? Json(new { success = "success", message = "添加产品入库成功" }) : Json(new { success = "fail", message = "失败" });
+            return ok ? Json(new { success = "success", message = "添加产品入库成功" }) : Json(new { success = "fail", message = "失败，批号存在" });
         }
 
 
