@@ -192,6 +192,10 @@
     <Content Include="img\small_tm.png" />
     <Content Include="img\title.png" />
     <Content Include="img\仓库.jpg" />
+    <Content Include="Package\NPOI.dll" />
+    <Content Include="Package\NPOI.OOXML.dll" />
+    <Content Include="Package\NPOI.OpenXml4Net.dll" />
+    <Content Include="Package\NPOI.OpenXmlFormats.dll" />
     <Content Include="Scripts\bootstrap-table-zh-CN.js" />
     <Content Include="Scripts\bootstrap-table.js" />
     <Content Include="Scripts\bootstrap.js" />
