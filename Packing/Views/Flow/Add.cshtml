@@ -1,0 +1,105 @@
+﻿@model Packing.Models.FlowViewModel
+@{
+    ViewBag.Title = "新建项目";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(function () {
+            //changeProjectKind();
+           // $('select[id=ProjectKind]').change(changeProjectKind);
+
+            $('#submit').click(function() {
+                $.ajax({
+                    url: '@Url.Action("Add")',
+                    type: "Post",
+                    data: $('#form').serialize(),
+                    success: function(data) {
+                        if (data.success === 'success') {
+                            window.location.href = '@Url.Action("Index")';
+                            alert(data.message);
+                        }
+                        if (data.success === 'fail') {
+                            alert(data.message);
+                        }
+                    },
+                    error: function(data) {
+                        alert(data);
+                    }
+                });
+            });
+
+            $('input[type=radio][name=project]').change(function() {
+                if (this.value === '1') {
+                    $("#Specifications").val("无");
+                } else if (this.value === '2') {
+                    $("#Specifications").val("长度");
+                } else {
+                    $("#Specifications").val("其他");
+                }
+            });
+        });
+
+        @*function changeProjectKind() {
+            $.ajax({
+                url: '@Url.Action("ChangeProjectKind")',
+                type: "Post",
+                data: { projectKind: $("#ProjectKind").val()},
+                success: function(data) {
+                    $("#BuildId").empty();
+                    //$("#BuildId").prepend("<option value='0'>全部</option>");
+                    for (var i = 0; i < data.length; i++) {
+                        $("#BuildId").append("<option value='" + data[i].Id + "'>" + data[i].BuildName + "</option>");
+                    }
+
+                    //$("#ConstructionId").empty();
+                    //for (var j = 0; j < data.dataConstruction.length; j++) {
+                    //    $("#ConstructionId").append("<option value='" + data.dataConstruction[j].Id + "'>" + data.dataConstruction[j].ConstructionName + "</option>");
+                    //    console.log(data.dataConstruction[j].Id, data.dataConstruction[j].ConstructionName );
+                    //}
+                }
+            });
+        }*@
+    </script>
+}
+
+<h2>@ViewBag.Title</h2>
+
+<form id="form" class="form-horizontal" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>项目信息</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @*<div class="form-group">
+            @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>*@
+
+     
+
+        @*<div class="form-group">
+            @Html.LabelFor(model => model.PrivilegeId, htmlAttributes: new { @class = "control-label col-md-2 " })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.PrivilegeId, (IEnumerable<SelectListItem>)ViewBag.PrivilegeName, new { @class = "form-control" })
+            </div>
+        </div>*@
+
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="添加" class="btn btn-default" id="submit" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    @Html.ActionLink("返回", "Index")
+</div>
+

@@ -1,0 +1,82 @@
+﻿@model Packing.Models.FlowNodeViewModel
+@{
+    ViewBag.Title = "添加单子";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(function () {
+            //$('#UserWorkKindId').prepend("<option value='0'>无</option>");
+            //$('#UserWorkKindId').val(0);
+            $('#submit').click(function() {
+                $.ajax({
+                    url: '@Url.Action("Add")',
+                    type: "Post",
+                    data: $('#form').serialize(),
+                    success: function(data) {
+                        if (data.success === 'success') {
+                            window.location.href = '@Url.Action("Index")';
+                            alert(data.message);
+                        }
+                        if (data.success === 'fail') {
+                            alert(data.message);
+                        }
+                    },
+                    error: function(data) {
+                        alert(data);
+                    }
+                });
+            });
+
+            $('input[type=radio][name=project]').change(function() {
+                if (this.value === '1') {
+                    $("#Specifications").val("无");
+                } else if (this.value === '2') {
+                    $("#Specifications").val("长度");
+                } else {
+                    $("#Specifications").val("其他");
+                }
+            });
+        });
+    </script>
+}
+
+<h2>@ViewBag.Title</h2>
+
+<form id="form" class="form-horizontal" method="post">
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(a => a.FlowId)
+    <div class="form-horizontal">
+
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FlowNodeName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FlowNodeName, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+       
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DeptId, htmlAttributes: new { @class = "control-label col-md-2 " })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.DeptId, (IEnumerable<SelectListItem>)ViewBag.DeptName, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="添加" class="btn btn-default" id="submit" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    @Html.ActionLink("返回", "Index")
+</div>
+

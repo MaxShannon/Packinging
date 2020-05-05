@@ -1,0 +1,107 @@
+﻿@model DbEfModel.CargoViewModel
+@{
+    ViewBag.Title = "新增出库";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+
+    $(function () {
+
+        @*if (@Model.CatId == 2) {
+            $('#CargoAreaId').attr({ "disabled": true });
+        }*@
+
+        $('#submit').click(function () {
+            $('#CargoAreaId').attr({ "disabled": false });
+            $.ajax({
+                url: '@Url.Action("StorageShippingCreate")',
+                type: "Post",
+                data: $('#form').serialize(),
+                success: function (data) {
+                    if (data.success === 'success') {
+                        window.location.href = '@Url.Action("index")';
+                        alert(data.message);
+                    }
+                    if (data.success === 'fail') {
+                        alert(data.message);
+                    }
+                    $('#CargoAreaId').attr({ "disabled": true });
+                },
+                error: function (data) {
+                    alert(data);
+                    $('#CargoAreaId').attr({ "disabled": true });
+                }
+            });
+        });
+
+        $('input[type=radio][name=project]').change(function() {
+            if (this.value === '1') {
+                $("#project").show();
+            }
+            else  {
+                $("#project").hide();
+            }
+        });
+
+
+    });
+    </script>
+}
+
+
+
+
+
+<h2>@ViewBag.Title</h2>
+
+<form id="form" class="form-horizontal" method="post">
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Huom2Id)
+    <div class="form-horizontal">
+        <h4>产品信息</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.ShipmentNo, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.ShipmentId, (IEnumerable<SelectListItem>)ViewBag.CargoShipmentNo, new { @class = "form-control" })
+            </div>
+        </div>
+        
+        <div class="form-group">
+            @Html.LabelFor(m => m.ChangeWeight, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.ChangeWeight, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.HuotId, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.HuotId, (IEnumerable<SelectListItem>)ViewBag.HuotName, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.CargoInId, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CargoInId, (IEnumerable<SelectListItem>)ViewBag.CargoInName, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="添加" class="btn btn-default" id="submit" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    @Html.ActionLink("返回", "Index")
+</div>
+

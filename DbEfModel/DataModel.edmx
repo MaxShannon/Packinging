@@ -1,0 +1,980 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="jhglModel1.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CargoHuotInfoes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CargoId" Type="int" Nullable="false" />
+          <Property Name="HuotId" Type="int" Nullable="false" />
+          <Property Name="Weight" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="CargoName" Type="nchar" MaxLength="10" />
+          <Property Name="HuotName" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="CargoInfoes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Huom2Id" Type="int" Nullable="false" />
+          <Property Name="Weight" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="CargoName" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="CargoInInfoes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CargoInName" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CargoLogInfoes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CargoId" Type="int" Nullable="false" />
+          <Property Name="ShipmentId" Type="int" Nullable="false" />
+          <Property Name="HuotId" Type="int" Nullable="false" />
+          <Property Name="ChangeWeight" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="CargoInId" Type="int" Nullable="false" />
+          <Property Name="StateId" Type="int" Nullable="false" />
+          <Property Name="Desc" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="InspectName" Type="nvarchar(max)" />
+          <Property Name="InspectTime" Type="datetime" />
+          <Property Name="IsIncome" Type="bit" />
+        </EntityType>
+        <EntityType Name="CargoOutOrderInfoes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="HuotId" Type="int" Nullable="false" />
+          <Property Name="ShipmentId" Type="int" Nullable="false" />
+          <Property Name="Weight" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cheh">
+          <Key>
+            <PropertyRef Name="DHLS" />
+          </Key>
+          <Property Name="DHLS" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id" Type="int" />
+          <Property Name="cheh" Type="varchar" MaxLength="50" />
+          <Property Name="big" Type="varchar" MaxLength="50" />
+          <Property Name="small" Type="varchar" MaxLength="50" />
+          <Property Name="printflag" Type="int" />
+          <Property Name="weight_flag" Type="int" />
+          <Property Name="shij" Type="datetime" />
+          <Property Name="del_flag" Type="int" />
+          <Property Name="del_time" Type="datetime" />
+          <Property Name="del_person" Type="varchar" MaxLength="50" />
+          <Property Name="isphone" Type="int" />
+          <Property Name="ceshi" Type="int" Nullable="false" />
+          <Property Name="xhflag" Type="int" />
+          <Property Name="xhqrperson" Type="varchar" MaxLength="50" />
+          <Property Name="xhqrtime" Type="datetime" />
+          <Property Name="xhpicurl" Type="varchar" MaxLength="50" />
+          <Property Name="door_in" Type="int" Nullable="false" />
+          <Property Name="door_out" Type="int" Nullable="false" />
+          <Property Name="in_person" Type="varchar" MaxLength="255" />
+          <Property Name="out_person" Type="varchar" MaxLength="255" />
+          <Property Name="in_time" Type="datetime" />
+          <Property Name="out_time" Type="datetime" />
+          <Property Name="print" Type="int" Nullable="false" />
+          <Property Name="in_place" Type="varchar" MaxLength="255" />
+          <Property Name="out_place" Type="varchar" MaxLength="255" />
+          <Property Name="ip" Type="varchar" MaxLength="50" />
+          <Property Name="sfsh" Type="int" />
+          <Property Name="shtg" Type="int" />
+          <Property Name="shry" Type="varchar" MaxLength="50" />
+          <Property Name="shtime" Type="datetime" />
+          <Property Name="sjid" Type="varchar" MaxLength="50" />
+          <Property Name="newshdd" Type="varchar" MaxLength="50" />
+          <Property Name="in_pic" Type="varchar" MaxLength="255" />
+          <Property Name="in_pic2" Type="varchar" MaxLength="255" />
+          <Property Name="sfmydts" Type="int" />
+          <Property Name="sjpx" Type="int" />
+          <Property Name="sj_pk" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="dw">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="dwname" Type="varchar" MaxLength="50" />
+          <Property Name="sfyx" Type="int" />
+          <Property Name="qzzp" Type="text" />
+          <Property Name="isxs" Type="int" />
+          <Property Name="isgy" Type="int" />
+          <Property Name="c_dm" Type="varchar" MaxLength="20" />
+          <Property Name="c_parentid" Type="varchar" MaxLength="20" />
+          <Property Name="qzurl" Type="text" />
+          <Property Name="n_sn" Type="int" />
+        </EntityType>
+        <EntityType Name="huom">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="fullflag" Type="int" />
+          <Property Name="sfsh" Type="int" />
+          <Property Name="sfyx" Type="int" />
+          <Property Name="isxs" Type="int" />
+          <Property Name="isgy" Type="int" />
+          <Property Name="isnd" Type="int" />
+        </EntityType>
+        <EntityType Name="huom2">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="sfyx" Type="int" />
+          <Property Name="huomid" Type="int" />
+        </EntityType>
+        <EntityType Name="huot">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="qyid" Type="int" />
+          <Property Name="qyname" Type="varchar" MaxLength="50" />
+          <Property Name="jd" Type="varchar" MaxLength="50" />
+          <Property Name="wd" Type="varchar" MaxLength="50" />
+          <Property Name="sfyx" Type="int" />
+          <Property Name="dwid" Type="int" />
+          <Property Name="ssdwid" Type="int" />
+          <Property Name="ip" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="HuotHuomInfoes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="HuomId" Type="int" Nullable="false" />
+          <Property Name="HuotId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="lx">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ShipmentHuotInfoes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="HuotId" Type="int" Nullable="false" />
+          <Property Name="ShipmentId" Type="int" Nullable="false" />
+          <Property Name="Weight" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="HuotName" Type="nchar" MaxLength="10" />
+          <Property Name="ShipmentNo" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="ShipmentInfoes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ShipmentNo" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Weight" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="CargoId" Type="int" Nullable="false" />
+          <Property Name="CargoName" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="sys_ry">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="c_zh" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="c_mm" Type="varchar" MaxLength="50" />
+          <Property Name="c_xm" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="v_yxbz" Type="varchar" MaxLength="1" />
+          <Property Name="c_dh" Type="varchar" MaxLength="50" />
+          <Property Name="n_dw" Type="int" />
+          <Property Name="c_openid" Type="varchar" MaxLength="50" />
+          <Property Name="c_nc" Type="varchar" MaxLength="50" />
+          <Property Name="c_webtoken" Type="varchar" MaxLength="50" />
+          <Property Name="c_szdw" Type="varchar" MaxLength="20" />
+          <Property Name="c_qxdw" Type="varchar" MaxLength="20" />
+          <Property Name="username" Type="varchar" MaxLength="50" />
+          <Property Name="password" Type="varchar" MaxLength="50" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="dw" Type="varchar" MaxLength="50" />
+          <Property Name="qx" Type="int" />
+          <Property Name="dwid" Type="int" />
+          <Property Name="lx" Type="int" />
+          <Property Name="devicecode" Type="varchar" MaxLength="50" />
+          <Property Name="ip" Type="varchar" MaxLength="50" />
+          <Property Name="htid" Type="int" />
+          <Property Name="sfyx" Type="int" />
+          <Property Name="qzurl" Type="ntext" />
+          <Property Name="zgqzurl" Type="ntext" />
+          <Property Name="qyid" Type="int" />
+          <Property Name="tel" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <!--生成过程中发现错误:
+警告 6002: 表/视图“jhgl.dbo.CargoView”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+        <EntityType Name="CargoView">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="Expr1" />
+          </Key>
+          <Property Name="huomid" Type="int" />
+          <Property Name="dwid" Type="int" />
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="dwname" Type="varchar" MaxLength="50" />
+          <Property Name="sfyx" Type="int" />
+          <Property Name="qzzp" Type="text" />
+          <Property Name="isxs" Type="int" />
+          <Property Name="isgy" Type="int" />
+          <Property Name="Expr1" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="fullflag" Type="int" />
+          <Property Name="sfsh" Type="int" />
+          <Property Name="Expr2" Type="int" />
+        </EntityType>
+        <!--生成过程中发现错误:
+警告 6002: 表/视图“jhgl.dbo.HuotView”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+        <EntityType Name="HuotView">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="Expr2" />
+          </Key>
+          <Property Name="htid" Type="int" />
+          <Property Name="dwid" Type="int" />
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="qyid" Type="int" />
+          <Property Name="qyname" Type="varchar" MaxLength="50" />
+          <Property Name="jd" Type="varchar" MaxLength="50" />
+          <Property Name="wd" Type="varchar" MaxLength="50" />
+          <Property Name="sfyx" Type="int" />
+          <Property Name="Expr1" Type="int" />
+          <Property Name="Expr2" Type="int" Nullable="false" />
+          <Property Name="dwname" Type="varchar" MaxLength="50" />
+          <Property Name="Expr3" Type="int" />
+          <Property Name="qzzp" Type="text" />
+          <Property Name="isxs" Type="int" />
+          <Property Name="isgy" Type="int" />
+        </EntityType>
+        <!--生成过程中发现错误:
+警告 6002: 表/视图“jhgl.dbo.ShipmentView”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+        <EntityType Name="ShipmentView">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="DHLS" />
+            <PropertyRef Name="PH_NO" />
+            <PropertyRef Name="PH_ZL" />
+            <PropertyRef Name="sj" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DHLS" Type="int" Nullable="false" />
+          <Property Name="PH_NO" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PH_ZL" Type="float" Nullable="false" />
+          <Property Name="sj" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="tihuolx" Type="nchar" MaxLength="10" />
+          <Property Name="qianfa" Type="nchar" MaxLength="10" />
+          <Property Name="del" Type="int" />
+          <Property Name="IsChecked" Type="bit" />
+          <Property Name="HuotId" Type="int" />
+          <Property Name="del_time" Type="nvarchar(max)" />
+          <Property Name="del_Name" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <EntityContainer Name="jhglModel1StoreContainer">
+          <EntitySet Name="CargoHuotInfoes" EntityType="Self.CargoHuotInfoes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CargoInfoes" EntityType="Self.CargoInfoes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CargoInInfoes" EntityType="Self.CargoInInfoes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CargoLogInfoes" EntityType="Self.CargoLogInfoes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CargoOutOrderInfoes" EntityType="Self.CargoOutOrderInfoes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="cheh" EntityType="Self.cheh" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="dw" EntityType="Self.dw" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="huom" EntityType="Self.huom" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="huom2" EntityType="Self.huom2" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="huot" EntityType="Self.huot" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="HuotHuomInfoes" EntityType="Self.HuotHuomInfoes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="lx" EntityType="Self.lx" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ShipmentHuotInfoes" EntityType="Self.ShipmentHuotInfoes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ShipmentInfoes" EntityType="Self.ShipmentInfoes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sys_ry" EntityType="Self.sys_ry" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CargoView" EntityType="Self.CargoView" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [CargoView].[huomid] AS [huomid], 
+    [CargoView].[dwid] AS [dwid], 
+    [CargoView].[id] AS [id], 
+    [CargoView].[dwname] AS [dwname], 
+    [CargoView].[sfyx] AS [sfyx], 
+    [CargoView].[qzzp] AS [qzzp], 
+    [CargoView].[isxs] AS [isxs], 
+    [CargoView].[isgy] AS [isgy], 
+    [CargoView].[Expr1] AS [Expr1], 
+    [CargoView].[name] AS [name], 
+    [CargoView].[fullflag] AS [fullflag], 
+    [CargoView].[sfsh] AS [sfsh], 
+    [CargoView].[Expr2] AS [Expr2]
+    FROM [dbo].[CargoView] AS [CargoView]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="HuotView" EntityType="Self.HuotView" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [HuotView].[htid] AS [htid], 
+    [HuotView].[dwid] AS [dwid], 
+    [HuotView].[id] AS [id], 
+    [HuotView].[name] AS [name], 
+    [HuotView].[qyid] AS [qyid], 
+    [HuotView].[qyname] AS [qyname], 
+    [HuotView].[jd] AS [jd], 
+    [HuotView].[wd] AS [wd], 
+    [HuotView].[sfyx] AS [sfyx], 
+    [HuotView].[Expr1] AS [Expr1], 
+    [HuotView].[Expr2] AS [Expr2], 
+    [HuotView].[dwname] AS [dwname], 
+    [HuotView].[Expr3] AS [Expr3], 
+    [HuotView].[qzzp] AS [qzzp], 
+    [HuotView].[isxs] AS [isxs], 
+    [HuotView].[isgy] AS [isgy]
+    FROM [dbo].[HuotView] AS [HuotView]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="ShipmentView" EntityType="Self.ShipmentView" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [ShipmentView].[ID] AS [ID], 
+    [ShipmentView].[DHLS] AS [DHLS], 
+    [ShipmentView].[PH_NO] AS [PH_NO], 
+    [ShipmentView].[PH_ZL] AS [PH_ZL], 
+    [ShipmentView].[sj] AS [sj], 
+    [ShipmentView].[tihuolx] AS [tihuolx], 
+    [ShipmentView].[qianfa] AS [qianfa], 
+    [ShipmentView].[del] AS [del], 
+    [ShipmentView].[IsChecked] AS [IsChecked], 
+    [ShipmentView].[HuotId] AS [HuotId], 
+    [ShipmentView].[del_time] AS [del_time], 
+    [ShipmentView].[del_Name] AS [del_Name]
+    FROM [dbo].[ShipmentView] AS [ShipmentView]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="jhglModel1" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="jhglEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CargoHuotInfoes" EntityType="jhglModel1.CargoHuotInfoes" />
+          <EntitySet Name="CargoInfoes" EntityType="jhglModel1.CargoInfoes" />
+          <EntitySet Name="CargoInInfoes" EntityType="jhglModel1.CargoInInfoes" />
+          <EntitySet Name="CargoLogInfoes" EntityType="jhglModel1.CargoLogInfoes" />
+          <EntitySet Name="CargoOutOrderInfoes" EntityType="jhglModel1.CargoOutOrderInfoes" />
+          <EntitySet Name="cheh" EntityType="jhglModel1.cheh" />
+          <EntitySet Name="dw" EntityType="jhglModel1.dw" />
+          <EntitySet Name="huom" EntityType="jhglModel1.huom" />
+          <EntitySet Name="huom2" EntityType="jhglModel1.huom2" />
+          <EntitySet Name="huot" EntityType="jhglModel1.huot" />
+          <EntitySet Name="HuotHuomInfoes" EntityType="jhglModel1.HuotHuomInfoes" />
+          <EntitySet Name="lx" EntityType="jhglModel1.lx" />
+          <EntitySet Name="ShipmentHuotInfoes" EntityType="jhglModel1.ShipmentHuotInfoes" />
+          <EntitySet Name="ShipmentInfoes" EntityType="jhglModel1.ShipmentInfoes" />
+          <EntitySet Name="sys_ry" EntityType="jhglModel1.sys_ry" />
+          <EntitySet Name="CargoView" EntityType="jhglModel1.CargoView" />
+          <EntitySet Name="HuotView" EntityType="jhglModel1.HuotView" />
+          <EntitySet Name="ShipmentView" EntityType="jhglModel1.ShipmentView" />
+        </EntityContainer>
+        <EntityType Name="CargoHuotInfoes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CargoId" Type="Int32" Nullable="false" />
+          <Property Name="HuotId" Type="Int32" Nullable="false" />
+          <Property Name="Weight" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="CargoName" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="HuotName" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <EntityType Name="CargoInfoes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Huom2Id" Type="Int32" Nullable="false" />
+          <Property Name="Weight" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="CargoName" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <EntityType Name="CargoInInfoes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CargoInName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="CargoLogInfoes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CargoId" Type="Int32" Nullable="false" />
+          <Property Name="ShipmentId" Type="Int32" Nullable="false" />
+          <Property Name="HuotId" Type="Int32" Nullable="false" />
+          <Property Name="ChangeWeight" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="CargoInId" Type="Int32" Nullable="false" />
+          <Property Name="StateId" Type="Int32" Nullable="false" />
+          <Property Name="Desc" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="InspectName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="InspectTime" Type="DateTime" Precision="3" />
+          <Property Name="IsIncome" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="CargoOutOrderInfoes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="HuotId" Type="Int32" Nullable="false" />
+          <Property Name="ShipmentId" Type="Int32" Nullable="false" />
+          <Property Name="Weight" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="cheh">
+          <Key>
+            <PropertyRef Name="DHLS" />
+          </Key>
+          <Property Name="DHLS" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="Int32" />
+          <Property Name="cheh1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="big" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="small" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="printflag" Type="Int32" />
+          <Property Name="weight_flag" Type="Int32" />
+          <Property Name="shij" Type="DateTime" Precision="3" />
+          <Property Name="del_flag" Type="Int32" />
+          <Property Name="del_time" Type="DateTime" Precision="3" />
+          <Property Name="del_person" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="isphone" Type="Int32" />
+          <Property Name="ceshi" Type="Int32" Nullable="false" />
+          <Property Name="xhflag" Type="Int32" />
+          <Property Name="xhqrperson" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="xhqrtime" Type="DateTime" Precision="3" />
+          <Property Name="xhpicurl" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="door_in" Type="Int32" Nullable="false" />
+          <Property Name="door_out" Type="Int32" Nullable="false" />
+          <Property Name="in_person" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="out_person" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="in_time" Type="DateTime" Precision="3" />
+          <Property Name="out_time" Type="DateTime" Precision="3" />
+          <Property Name="print" Type="Int32" Nullable="false" />
+          <Property Name="in_place" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="out_place" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="ip" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="sfsh" Type="Int32" />
+          <Property Name="shtg" Type="Int32" />
+          <Property Name="shry" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="shtime" Type="DateTime" Precision="3" />
+          <Property Name="sjid" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="newshdd" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="in_pic" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="in_pic2" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="sfmydts" Type="Int32" />
+          <Property Name="sjpx" Type="Int32" />
+          <Property Name="sj_pk" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="dw">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dwname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="sfyx" Type="Int32" />
+          <Property Name="qzzp" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="isxs" Type="Int32" />
+          <Property Name="isgy" Type="Int32" />
+          <Property Name="c_dm" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="c_parentid" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="qzurl" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="n_sn" Type="Int32" />
+        </EntityType>
+        <EntityType Name="huom">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="fullflag" Type="Int32" />
+          <Property Name="sfsh" Type="Int32" />
+          <Property Name="sfyx" Type="Int32" />
+          <Property Name="isxs" Type="Int32" />
+          <Property Name="isgy" Type="Int32" />
+          <Property Name="isnd" Type="Int32" />
+        </EntityType>
+        <EntityType Name="huom2">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="sfyx" Type="Int32" />
+          <Property Name="huomid" Type="Int32" />
+        </EntityType>
+        <EntityType Name="huot">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="qyid" Type="Int32" />
+          <Property Name="qyname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="jd" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="wd" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="sfyx" Type="Int32" />
+          <Property Name="dwid" Type="Int32" />
+          <Property Name="ssdwid" Type="Int32" />
+          <Property Name="ip" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="HuotHuomInfoes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="HuomId" Type="Int32" Nullable="false" />
+          <Property Name="HuotId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="lx">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="ShipmentHuotInfoes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="HuotId" Type="Int32" Nullable="false" />
+          <Property Name="ShipmentId" Type="Int32" Nullable="false" />
+          <Property Name="Weight" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="HuotName" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="ShipmentNo" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <EntityType Name="ShipmentInfoes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ShipmentNo" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Weight" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="CargoId" Type="Int32" Nullable="false" />
+          <Property Name="CargoName" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <EntityType Name="sys_ry">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="c_zh" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="c_mm" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="c_xm" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="v_yxbz" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="c_dh" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="n_dw" Type="Int32" />
+          <Property Name="c_openid" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="c_nc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="c_webtoken" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="c_szdw" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="c_qxdw" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="dw" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="qx" Type="Int32" />
+          <Property Name="dwid" Type="Int32" />
+          <Property Name="lx" Type="Int32" />
+          <Property Name="devicecode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ip" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="htid" Type="Int32" />
+          <Property Name="sfyx" Type="Int32" />
+          <Property Name="qzurl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="zgqzurl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="qyid" Type="Int32" />
+          <Property Name="tel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="CargoView">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="Expr1" />
+          </Key>
+          <Property Name="huomid" Type="Int32" />
+          <Property Name="dwid" Type="Int32" />
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="dwname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="sfyx" Type="Int32" />
+          <Property Name="qzzp" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="isxs" Type="Int32" />
+          <Property Name="isgy" Type="Int32" />
+          <Property Name="Expr1" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="fullflag" Type="Int32" />
+          <Property Name="sfsh" Type="Int32" />
+          <Property Name="Expr2" Type="Int32" />
+        </EntityType>
+        <EntityType Name="HuotView">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="Expr2" />
+          </Key>
+          <Property Name="htid" Type="Int32" />
+          <Property Name="dwid" Type="Int32" />
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="qyid" Type="Int32" />
+          <Property Name="qyname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="jd" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="wd" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="sfyx" Type="Int32" />
+          <Property Name="Expr1" Type="Int32" />
+          <Property Name="Expr2" Type="Int32" Nullable="false" />
+          <Property Name="dwname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Expr3" Type="Int32" />
+          <Property Name="qzzp" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="isxs" Type="Int32" />
+          <Property Name="isgy" Type="Int32" />
+        </EntityType>
+        <EntityType Name="ShipmentView">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="DHLS" />
+            <PropertyRef Name="PH_NO" />
+            <PropertyRef Name="PH_ZL" />
+            <PropertyRef Name="sj" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DHLS" Type="Int32" Nullable="false" />
+          <Property Name="PH_NO" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PH_ZL" Type="Double" Nullable="false" />
+          <Property Name="sj" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="tihuolx" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="qianfa" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="del" Type="Int32" />
+          <Property Name="IsChecked" Type="Boolean" />
+          <Property Name="HuotId" Type="Int32" />
+          <Property Name="del_time" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="del_Name" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="jhglModel1StoreContainer" CdmEntityContainer="jhglEntities">
+          <EntitySetMapping Name="CargoHuotInfoes">
+            <EntityTypeMapping TypeName="jhglModel1.CargoHuotInfoes">
+              <MappingFragment StoreEntitySet="CargoHuotInfoes">
+                <ScalarProperty Name="HuotName" ColumnName="HuotName" />
+                <ScalarProperty Name="CargoName" ColumnName="CargoName" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="HuotId" ColumnName="HuotId" />
+                <ScalarProperty Name="CargoId" ColumnName="CargoId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CargoInfoes">
+            <EntityTypeMapping TypeName="jhglModel1.CargoInfoes">
+              <MappingFragment StoreEntitySet="CargoInfoes">
+                <ScalarProperty Name="CargoName" ColumnName="CargoName" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Huom2Id" ColumnName="Huom2Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CargoInInfoes">
+            <EntityTypeMapping TypeName="jhglModel1.CargoInInfoes">
+              <MappingFragment StoreEntitySet="CargoInInfoes">
+                <ScalarProperty Name="CargoInName" ColumnName="CargoInName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CargoLogInfoes">
+            <EntityTypeMapping TypeName="jhglModel1.CargoLogInfoes">
+              <MappingFragment StoreEntitySet="CargoLogInfoes">
+                <ScalarProperty Name="IsIncome" ColumnName="IsIncome" />
+                <ScalarProperty Name="InspectTime" ColumnName="InspectTime" />
+                <ScalarProperty Name="InspectName" ColumnName="InspectName" />
+                <ScalarProperty Name="Desc" ColumnName="Desc" />
+                <ScalarProperty Name="StateId" ColumnName="StateId" />
+                <ScalarProperty Name="CargoInId" ColumnName="CargoInId" />
+                <ScalarProperty Name="ChangeWeight" ColumnName="ChangeWeight" />
+                <ScalarProperty Name="HuotId" ColumnName="HuotId" />
+                <ScalarProperty Name="ShipmentId" ColumnName="ShipmentId" />
+                <ScalarProperty Name="CargoId" ColumnName="CargoId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CargoOutOrderInfoes">
+            <EntityTypeMapping TypeName="jhglModel1.CargoOutOrderInfoes">
+              <MappingFragment StoreEntitySet="CargoOutOrderInfoes">
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="ShipmentId" ColumnName="ShipmentId" />
+                <ScalarProperty Name="HuotId" ColumnName="HuotId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cheh">
+            <EntityTypeMapping TypeName="jhglModel1.cheh">
+              <MappingFragment StoreEntitySet="cheh">
+                <ScalarProperty Name="sj_pk" ColumnName="sj_pk" />
+                <ScalarProperty Name="sjpx" ColumnName="sjpx" />
+                <ScalarProperty Name="sfmydts" ColumnName="sfmydts" />
+                <ScalarProperty Name="in_pic2" ColumnName="in_pic2" />
+                <ScalarProperty Name="in_pic" ColumnName="in_pic" />
+                <ScalarProperty Name="newshdd" ColumnName="newshdd" />
+                <ScalarProperty Name="sjid" ColumnName="sjid" />
+                <ScalarProperty Name="shtime" ColumnName="shtime" />
+                <ScalarProperty Name="shry" ColumnName="shry" />
+                <ScalarProperty Name="shtg" ColumnName="shtg" />
+                <ScalarProperty Name="sfsh" ColumnName="sfsh" />
+                <ScalarProperty Name="ip" ColumnName="ip" />
+                <ScalarProperty Name="out_place" ColumnName="out_place" />
+                <ScalarProperty Name="in_place" ColumnName="in_place" />
+                <ScalarProperty Name="print" ColumnName="print" />
+                <ScalarProperty Name="out_time" ColumnName="out_time" />
+                <ScalarProperty Name="in_time" ColumnName="in_time" />
+                <ScalarProperty Name="out_person" ColumnName="out_person" />
+                <ScalarProperty Name="in_person" ColumnName="in_person" />
+                <ScalarProperty Name="door_out" ColumnName="door_out" />
+                <ScalarProperty Name="door_in" ColumnName="door_in" />
+                <ScalarProperty Name="xhpicurl" ColumnName="xhpicurl" />
+                <ScalarProperty Name="xhqrtime" ColumnName="xhqrtime" />
+                <ScalarProperty Name="xhqrperson" ColumnName="xhqrperson" />
+                <ScalarProperty Name="xhflag" ColumnName="xhflag" />
+                <ScalarProperty Name="ceshi" ColumnName="ceshi" />
+                <ScalarProperty Name="isphone" ColumnName="isphone" />
+                <ScalarProperty Name="del_person" ColumnName="del_person" />
+                <ScalarProperty Name="del_time" ColumnName="del_time" />
+                <ScalarProperty Name="del_flag" ColumnName="del_flag" />
+                <ScalarProperty Name="shij" ColumnName="shij" />
+                <ScalarProperty Name="weight_flag" ColumnName="weight_flag" />
+                <ScalarProperty Name="printflag" ColumnName="printflag" />
+                <ScalarProperty Name="small" ColumnName="small" />
+                <ScalarProperty Name="big" ColumnName="big" />
+                <ScalarProperty Name="cheh1" ColumnName="cheh" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="DHLS" ColumnName="DHLS" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="dw">
+            <EntityTypeMapping TypeName="jhglModel1.dw">
+              <MappingFragment StoreEntitySet="dw">
+                <ScalarProperty Name="n_sn" ColumnName="n_sn" />
+                <ScalarProperty Name="qzurl" ColumnName="qzurl" />
+                <ScalarProperty Name="c_parentid" ColumnName="c_parentid" />
+                <ScalarProperty Name="c_dm" ColumnName="c_dm" />
+                <ScalarProperty Name="isgy" ColumnName="isgy" />
+                <ScalarProperty Name="isxs" ColumnName="isxs" />
+                <ScalarProperty Name="qzzp" ColumnName="qzzp" />
+                <ScalarProperty Name="sfyx" ColumnName="sfyx" />
+                <ScalarProperty Name="dwname" ColumnName="dwname" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="huom">
+            <EntityTypeMapping TypeName="jhglModel1.huom">
+              <MappingFragment StoreEntitySet="huom">
+                <ScalarProperty Name="isnd" ColumnName="isnd" />
+                <ScalarProperty Name="isgy" ColumnName="isgy" />
+                <ScalarProperty Name="isxs" ColumnName="isxs" />
+                <ScalarProperty Name="sfyx" ColumnName="sfyx" />
+                <ScalarProperty Name="sfsh" ColumnName="sfsh" />
+                <ScalarProperty Name="fullflag" ColumnName="fullflag" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="huom2">
+            <EntityTypeMapping TypeName="jhglModel1.huom2">
+              <MappingFragment StoreEntitySet="huom2">
+                <ScalarProperty Name="huomid" ColumnName="huomid" />
+                <ScalarProperty Name="sfyx" ColumnName="sfyx" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="huot">
+            <EntityTypeMapping TypeName="jhglModel1.huot">
+              <MappingFragment StoreEntitySet="huot">
+                <ScalarProperty Name="ip" ColumnName="ip" />
+                <ScalarProperty Name="ssdwid" ColumnName="ssdwid" />
+                <ScalarProperty Name="dwid" ColumnName="dwid" />
+                <ScalarProperty Name="sfyx" ColumnName="sfyx" />
+                <ScalarProperty Name="wd" ColumnName="wd" />
+                <ScalarProperty Name="jd" ColumnName="jd" />
+                <ScalarProperty Name="qyname" ColumnName="qyname" />
+                <ScalarProperty Name="qyid" ColumnName="qyid" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HuotHuomInfoes">
+            <EntityTypeMapping TypeName="jhglModel1.HuotHuomInfoes">
+              <MappingFragment StoreEntitySet="HuotHuomInfoes">
+                <ScalarProperty Name="HuotId" ColumnName="HuotId" />
+                <ScalarProperty Name="HuomId" ColumnName="HuomId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="lx">
+            <EntityTypeMapping TypeName="jhglModel1.lx">
+              <MappingFragment StoreEntitySet="lx">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ShipmentHuotInfoes">
+            <EntityTypeMapping TypeName="jhglModel1.ShipmentHuotInfoes">
+              <MappingFragment StoreEntitySet="ShipmentHuotInfoes">
+                <ScalarProperty Name="ShipmentNo" ColumnName="ShipmentNo" />
+                <ScalarProperty Name="HuotName" ColumnName="HuotName" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="ShipmentId" ColumnName="ShipmentId" />
+                <ScalarProperty Name="HuotId" ColumnName="HuotId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ShipmentInfoes">
+            <EntityTypeMapping TypeName="jhglModel1.ShipmentInfoes">
+              <MappingFragment StoreEntitySet="ShipmentInfoes">
+                <ScalarProperty Name="CargoName" ColumnName="CargoName" />
+                <ScalarProperty Name="CargoId" ColumnName="CargoId" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="ShipmentNo" ColumnName="ShipmentNo" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sys_ry">
+            <EntityTypeMapping TypeName="jhglModel1.sys_ry">
+              <MappingFragment StoreEntitySet="sys_ry">
+                <ScalarProperty Name="tel" ColumnName="tel" />
+                <ScalarProperty Name="qyid" ColumnName="qyid" />
+                <ScalarProperty Name="zgqzurl" ColumnName="zgqzurl" />
+                <ScalarProperty Name="qzurl" ColumnName="qzurl" />
+                <ScalarProperty Name="sfyx" ColumnName="sfyx" />
+                <ScalarProperty Name="htid" ColumnName="htid" />
+                <ScalarProperty Name="ip" ColumnName="ip" />
+                <ScalarProperty Name="devicecode" ColumnName="devicecode" />
+                <ScalarProperty Name="lx" ColumnName="lx" />
+                <ScalarProperty Name="dwid" ColumnName="dwid" />
+                <ScalarProperty Name="qx" ColumnName="qx" />
+                <ScalarProperty Name="dw" ColumnName="dw" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="c_qxdw" ColumnName="c_qxdw" />
+                <ScalarProperty Name="c_szdw" ColumnName="c_szdw" />
+                <ScalarProperty Name="c_webtoken" ColumnName="c_webtoken" />
+                <ScalarProperty Name="c_nc" ColumnName="c_nc" />
+                <ScalarProperty Name="c_openid" ColumnName="c_openid" />
+                <ScalarProperty Name="n_dw" ColumnName="n_dw" />
+                <ScalarProperty Name="c_dh" ColumnName="c_dh" />
+                <ScalarProperty Name="v_yxbz" ColumnName="v_yxbz" />
+                <ScalarProperty Name="c_xm" ColumnName="c_xm" />
+                <ScalarProperty Name="c_mm" ColumnName="c_mm" />
+                <ScalarProperty Name="c_zh" ColumnName="c_zh" />
+                <ScalarProperty Name="pk" ColumnName="pk" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CargoView">
+            <EntityTypeMapping TypeName="jhglModel1.CargoView">
+              <MappingFragment StoreEntitySet="CargoView">
+                <ScalarProperty Name="Expr2" ColumnName="Expr2" />
+                <ScalarProperty Name="sfsh" ColumnName="sfsh" />
+                <ScalarProperty Name="fullflag" ColumnName="fullflag" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="Expr1" ColumnName="Expr1" />
+                <ScalarProperty Name="isgy" ColumnName="isgy" />
+                <ScalarProperty Name="isxs" ColumnName="isxs" />
+                <ScalarProperty Name="qzzp" ColumnName="qzzp" />
+                <ScalarProperty Name="sfyx" ColumnName="sfyx" />
+                <ScalarProperty Name="dwname" ColumnName="dwname" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="dwid" ColumnName="dwid" />
+                <ScalarProperty Name="huomid" ColumnName="huomid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HuotView">
+            <EntityTypeMapping TypeName="jhglModel1.HuotView">
+              <MappingFragment StoreEntitySet="HuotView">
+                <ScalarProperty Name="isgy" ColumnName="isgy" />
+                <ScalarProperty Name="isxs" ColumnName="isxs" />
+                <ScalarProperty Name="qzzp" ColumnName="qzzp" />
+                <ScalarProperty Name="Expr3" ColumnName="Expr3" />
+                <ScalarProperty Name="dwname" ColumnName="dwname" />
+                <ScalarProperty Name="Expr2" ColumnName="Expr2" />
+                <ScalarProperty Name="Expr1" ColumnName="Expr1" />
+                <ScalarProperty Name="sfyx" ColumnName="sfyx" />
+                <ScalarProperty Name="wd" ColumnName="wd" />
+                <ScalarProperty Name="jd" ColumnName="jd" />
+                <ScalarProperty Name="qyname" ColumnName="qyname" />
+                <ScalarProperty Name="qyid" ColumnName="qyid" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="dwid" ColumnName="dwid" />
+                <ScalarProperty Name="htid" ColumnName="htid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ShipmentView">
+            <EntityTypeMapping TypeName="jhglModel1.ShipmentView">
+              <MappingFragment StoreEntitySet="ShipmentView">
+                <ScalarProperty Name="del_Name" ColumnName="del_Name" />
+                <ScalarProperty Name="del_time" ColumnName="del_time" />
+                <ScalarProperty Name="HuotId" ColumnName="HuotId" />
+                <ScalarProperty Name="IsChecked" ColumnName="IsChecked" />
+                <ScalarProperty Name="del" ColumnName="del" />
+                <ScalarProperty Name="qianfa" ColumnName="qianfa" />
+                <ScalarProperty Name="tihuolx" ColumnName="tihuolx" />
+                <ScalarProperty Name="sj" ColumnName="sj" />
+                <ScalarProperty Name="PH_ZL" ColumnName="PH_ZL" />
+                <ScalarProperty Name="PH_NO" ColumnName="PH_NO" />
+                <ScalarProperty Name="DHLS" ColumnName="DHLS" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

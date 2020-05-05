@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - 我的 ASP.NET 应用程序</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @*@Html.ActionLink("应用程序名称", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+
+                    @if ("2" == "2")//((Session["LoginUser"] as UserInfo).PrivilegeId).ToString()
+                    {
+                        @*<li>@Html.ActionLink("人员管理", "Index", "Account")</li>
+                        <li>@Html.ActionLink("部门管理", "Index", "Dept")</li>*@
+
+                        <li><a href="/Cargo/Audit">审核</a> @*@Html.ActionLink("", "Index", "ProductionOrder",new{ flowId = 1})*@</li>
+                    }
+                    <li>@Html.ActionLink("产品", "Index", "Cargo")</li>
+                    @*<li>@Html.ActionLink("库存", "StorageIncoming", "Cargo")</li>*@
+                    @*<li>@Html.ActionLink("批号", "Index", "Shipment")</li>*@
+                    <li>@Html.ActionLink("记录", "Details", "Cargo")</li>
+                    <li>@Html.ActionLink("仓库", "Index", "CargoArea")</li>
+                </ul>
+                @if (Session["LoginUser"] != null)
+                {
+                    @Html.AntiForgeryToken()
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="@Url.Action("Manage","Account")">你好 @ViewData["UserName"]</a>
+                            @*@Html.ActionLink("你好 " + @ViewData["UserName"], "Manage", "Account", routeValues: null, htmlAttributes: new {title = "管理"})*@
+                        </li>
+                        <li><a href="@Url.Action("LogOff","Login")">注销</a></li>
+                    </ul>
+                    //}
+                }
+                else
+                {
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>@Html.ActionLink("注册", "Register", "Login", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                        <li>@Html.ActionLink("登录", "Index", "Login", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - 应用程序</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

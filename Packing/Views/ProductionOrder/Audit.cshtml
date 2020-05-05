@@ -1,0 +1,88 @@
+﻿@model Packing.Models.ProductionOrderViewModel
+@{
+    ViewBag.Title = "审核";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(function () {
+            //$('#UserWorkKindId').prepend("<option value='0'>无</option>");
+            //$('#UserWorkKindId').val(0);
+            $('#submit').click(function() {
+                $.ajax({
+                    url: '@Url.Action("Audit")',
+                    type: "Post",
+                    data: $('#form').serialize(),
+                    success: function(data) {
+                        if (data.success === 'success') {
+                            window.location.href = '@Url.Action("Index")';
+                            alert(data.message);
+                        }
+                        if (data.success === 'fail') {
+                            alert(data.message);
+                        }
+                    },
+                    error: function(data) {
+                        alert(data);
+                    }
+                });
+            });
+
+            $('input[type=radio][name=project]').change(function() {
+                if (this.value === '1') {
+                    $("#Specifications").val("无");
+                } else if (this.value === '2') {
+                    $("#Specifications").val("长度");
+                } else {
+                    $("#Specifications").val("其他");
+                }
+            });
+        });
+    </script>
+}
+
+<h2>@ViewBag.Title</h2>
+
+<form id="form" class="form-horizontal" method="post">
+    @Html.AntiForgeryToken()
+    @*@Html.HiddenFor(a => a.UserWorkKindId)*@
+    <div class="form-horizontal">
+
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Count, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Count, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Remark, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Remark, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FlowNodeName, htmlAttributes: new { @class = "control-label col-md-2 " })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CurrentNodeId, (IEnumerable<SelectListItem>)ViewBag.CurrentNodeName, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="通过" class="btn btn-default" id="submit" />
+                <input type="button" value="驳回" class="btn btn-default" id="submit2" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    @Html.ActionLink("返回", "Index")
+</div>
+

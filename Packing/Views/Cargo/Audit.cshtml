@@ -1,0 +1,276 @@
+﻿@model DbEfModel.CargoViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+@section Scripts {
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/moment-with-locales.js"></script>
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+
+    <script src="~/Scripts/bootstrap-table.js"></script>
+    <link href="~/Content/bootstrap-table.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript">
+
+        $(function () {
+            var list = new TableInit();
+            list.Init();
+            $('#submit').click(function () {
+                list.Init();
+            });
+
+            $("#btn_print").click(function () {
+                var a = $("#list").bootstrapTable('getSelections');
+                if (a.length <= 0) {
+                    alert("请选中一行");
+                } else {
+                    var b = JSON.stringify(a);
+                    var url = "/Audit/Adds";
+                    $.ajax({
+                        dataType: "json",
+                        traditional: true,//这使json格式的字符不会被转码
+                        data: { "datalist": b },
+                        //data: b.serialize(),
+                        type: "post",
+                        url: url,
+                        success: function(data) {
+                            alert("成功！");
+                        },
+                        error: function(data) {
+                            alert(data.responseText);
+                        }
+                    });
+                }
+                list.Init();
+            });
+
+            $('#TimeStart').datetimepicker({
+                format: 'YYYY-MM-DD HH:mm',
+                locale: moment.locale('zh-cn')
+            });
+            $('#TimeEnd').datetimepicker({
+                format: 'YYYY-MM-DD HH:mm',
+                locale: moment.locale('zh-cn')
+            });
+
+        });
+
+        var TableInit = function () {
+            var oTableInit = new Object();
+            //初始化Table
+            oTableInit.Init = function () {
+                $('#list').bootstrapTable("destroy");
+                var a =  $('#list').bootstrapTable({
+                    url: '/Cargo/Audit', //请求后台的URL（*）
+                    method: 'Post', //请求方式（*）
+                    toolbar: '#toolbar', //工具按钮用哪个容器
+                    striped: true, //是否显示行间隔色
+                    cache: true,
+                    pagination: true, //是否显示分页（*）
+                    sortable: true, //是否启用排序
+                    sortOrder: "asc", //排序方式
+
+                    sidePagination: "server", //分页方式：client客户端分页，server服务端分页（*）
+                    pageNumber: 1, //初始化加载第一页，默认第一页
+                    pageSize: 10, //每页的记录行数（*）
+                    pageList: [10, 25, 50, 100], //可供选择的每页的行数（*）
+                    //search: false,
+                    contentType: "application/x-www-form-urlencoded",
+                    strictSearch: true,
+                    showColumns: true, //是否显示所有的列
+                    showRefresh: true, //是否显示刷新按钮
+                    minimumCountColumns: 2, //最少允许的列数
+                    clickToSelect: true, //是否启用点击选中行
+                    height: 670, //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                    uniqueId: "ID", //每一行的唯一标识，一般为主键列
+                    showToggle: true, //是否显示详细视图和列表视图的切换按钮
+                    cardView: false, //是否显示详细视图
+                    detailView: false, //是否显示父子表
+                    columns: [
+                        {
+                            field : 'checked',
+                            checkbox: true,
+                            //visible: true,
+                            formatter: function (value, row, index) { //设置满足条件的行可以使用复选框
+
+                                //if(row.IS_PASS !='0'){
+                                //    return {
+                                //        disabled : true
+                                //    }
+                                //}
+                            }
+                        },
+                        {
+                            field: 'Id',
+                            title: 'Id',
+                            visible: false
+                        }, {
+                            field: 'IsOk',
+                            title: 'IsOk',
+                            visible: false
+                        },
+                        {
+                            field: 'CargoName',
+                            title: '产品名称'
+                        },
+                        {
+                            field: 'ShipmentNo',
+                            title: '批号'
+                        },
+                        {
+                            field: 'HuotName',
+                            title: '货台'
+                        },
+                        {
+                            field: 'IsIncome',
+                            title: '出入状态',
+                            formatter: function (value, row, index) {
+                                if (row.IsIncome === true) {
+                                    return '入库';
+                                }
+                                else {
+                                    return '出库';
+                                }
+                            }
+                        },
+                        {
+                            field: 'ChangeWeight',
+                            title: '重量'
+                        },
+                        {
+                            field: 'InspectName',
+                            title: '录入人'
+                        },
+                        {
+                            field: 'Time',
+                            title: '录入时间',
+                            formatter: function(value, row, index) { //赋予的参数
+                                //如果记得时间戳是毫秒级的就需要*1000 不然就错了记得转换成整型
+                                if (value === null || value === undefined) {
+                                    return null;
+                                }
+                                var d = new Date(value.substr(6, 10) * 1000);
+                                var str = formatDate(d);
+                                return str;
+                            } //自定义方法，添加操作按钮
+                        },
+                        {
+                            field: 'operate',
+                            title: '操作',
+                            formatter: function (value, row, index) { //赋予的参数
+                                var str = '';
+                                //str += '<a class="btn btn-primary" href="@Url.Action("Index","Audit")?id=' + row.CargoLogId + '">历史记录</a>';
+                                if (row.IsOk && row.StateId == 1) {
+                                    str += '<a class="btn btn-primary" href="@Url.Action("Add","Audit")?id=' + row.CargoLogId + '">审核</a>';
+                                }
+                                @*str += '<a class="btn btn-primary" href="@Url.Action("Edit")?id=' + row.Id + '">修改</a>';
+                                str += '<a class="btn btn-primary" href="@Url.Action("Delete")?id=' + row.Id + '">删除</a>';*@
+                                return str;
+                            } //自定义方法，添加操作按钮
+                        }
+                    ],
+
+                    rowStyle: function(row, index) {
+                        var classesArr = ['success', 'info'];
+                        var rowStyle;
+                        if (index % 2 === 0) { //偶数行
+                            rowStyle = classesArr[0];
+                        } else { //奇数行
+                            rowStyle = classesArr[1];
+                        }
+                        return { classes: rowStyle };
+                    }, //隔行变色
+
+
+                    queryParams: function(params) {
+                        var temp = { //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                            limit: params.limit, //页面大小
+                            offset: params.offset,
+                            sort: params.sort,
+                            sortOrder: params.order, //排位命令（desc，asc）
+                            ID: $("#ID").val(),
+                            TimeStart: $("input[name='TimeStart']").val(),
+                            TimeEnd: $("input[name='TimeEnd']").val(),
+                            FlowId: $("#FlowId").val(),
+                            StateId: $("#StateId").val()
+                        };
+                        return temp;
+                    }
+
+                });
+            };
+
+            return oTableInit;
+        };
+
+        function formatDate(now) {
+            var year = now.getFullYear();
+            var month = now.getMonth() + 1;
+            var date = now.getDate();
+            var hour = now.getHours();
+            var minute = now.getMinutes();
+            var second = now.getSeconds();
+            return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
+        }
+    </script>
+
+}
+
+
+<h2>流水情况</h2>
+
+
+<form id="form" class="form-horizontal" method="post">
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+
+            <label class="control-label col-md-1">审核状态</label>
+            <div class="col-md-3">
+                @Html.DropDownListFor(a => a.StateId, (IEnumerable<SelectListItem>)ViewBag.StateList, new { @class = "form-control" })
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TimeStart, htmlAttributes: new { @class = "control-label col-md-1" })
+            <div class="col-md-3">
+                <div class="input-group date col-md-12" id="TimeStart">
+                    @Html.EditorFor(model => model.TimeStart, new { htmlAttributes = new { @class = "form-control" } })
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+
+            @Html.LabelFor(model => model.TimeEnd, htmlAttributes: new { @class = "control-label col-md-1" })
+            <div class="col-md-3">
+                <div class="input-group date col-md-12" id="TimeEnd">
+                    @Html.EditorFor(model => model.TimeEnd, new { htmlAttributes = new { @class = "form-control" } })
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+            <input type="button" value="查询" class="btn btn-default" id="submit" />
+            @*<button id="btn_print" type="button" class="btn btn-primary"><span class="glyphicon"></span>一键审核</button>*@
+        </div>
+
+        <div class="col-md-3">
+
+
+
+        </div>
+
+    </div>
+</form>
+
+
+<table id="list"></table>
+
+

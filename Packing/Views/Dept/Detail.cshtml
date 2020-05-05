@@ -1,0 +1,167 @@
+﻿@model Packing.Models.UserDeptViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+@section Scripts {
+    <script src="~/Scripts/bootstrap-table.js"></script>
+    <link href="~/Content/bootstrap-table.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript">
+
+        $(function () {
+            var list = new TableInit();
+            list.Init();
+            $('#submit').click(function () {
+                list.Init();
+            });
+        });
+
+        var TableInit = function () {
+            var oTableInit = new Object();
+            //初始化Table
+            oTableInit.Init = function () {
+                $('#list').bootstrapTable("destroy");
+                $('#list').bootstrapTable({
+                    url: '@Url.Action("Detail")', //请求后台的URL（*）
+                    method: 'Post', //请求方式（*）
+                    toolbar: '#toolbar', //工具按钮用哪个容器
+                    striped: true, //是否显示行间隔色
+                    cache: true,
+                    pagination: true, //是否显示分页（*）
+                    sortable: true, //是否启用排序
+                    sortOrder: "asc", //排序方式
+
+                    sidePagination: "server", //分页方式：client客户端分页，server服务端分页（*）
+                    pageNumber: 1, //初始化加载第一页，默认第一页
+                    pageSize: 10, //每页的记录行数（*）
+                    pageList: [10, 25, 50, 100], //可供选择的每页的行数（*）
+                    //search: false,
+                    contentType: "application/x-www-form-urlencoded",
+                    strictSearch: true,
+                    showColumns: true, //是否显示所有的列
+                    showRefresh: true, //是否显示刷新按钮
+                    minimumCountColumns: 2, //最少允许的列数
+                    clickToSelect: true, //是否启用点击选中行
+                    height: 670, //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                    uniqueId: "ID", //每一行的唯一标识，一般为主键列
+                    showToggle: true, //是否显示详细视图和列表视图的切换按钮
+                    cardView: false, //是否显示详细视图
+                    detailView: false, //是否显示父子表
+                    columns: [
+                        //{
+                        //    checkbox: true,
+                        //    visible: true
+                        //},
+                        //{
+                        //    field: 'Id',
+                        //    title: 'Id'
+                        //},
+                        {
+                            field: 'UserName',
+                            title: '名字'
+                        }, {
+                            field: 'DeptName',
+                            title: '单位部门'
+                        },
+                        //{
+                        //    field: 'PrivilegeName',
+                        //    title: '权限'
+                        //},
+                        @*{
+                            field: 'operate',
+                            title: '操作',
+                            formatter: function (value, row, index) { //赋予的参数
+                                var str = '';
+                                str += '<a class="btn btn-primary" href="@Url.Action("DeleteUser")?id=' + row.Id + '">开除</a>';
+                                //str += '<a class="btn btn-primary" href="@Url.Action("Edit")?id=' + row.Id + '">修改</a>';
+                                //str += '<a class="btn btn-primary" href="@Url.Action("Delete")?id=' + row.Id + '">删除</a>';
+                                return str;
+                            } //自定义方法，添加操作按钮
+                        }*@
+                    ],
+
+                    rowStyle: function (row, index) {
+                        var classesArr = ['success', 'info'];
+                        var rowStyle;
+                        if (index % 2 === 0) { //偶数行
+                            rowStyle = classesArr[0];
+                        } else { //奇数行
+                            rowStyle = classesArr[1];
+                        }
+                        return { classes: rowStyle };
+                    }, //隔行变色
+
+
+                    queryParams: function (params) {
+                        var temp = { //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                            limit: params.limit, //页面大小
+                            offset: params.offset,
+                            sort: params.sort,
+                            sortOrder: params.order, //排位命令（desc，asc）
+
+                            DeptId: $("#DeptId").val()
+                        };
+                        return temp;
+                    }
+
+                });
+
+
+            };
+
+            return oTableInit;
+        };
+
+    </script>
+
+}
+
+
+<h3>员工</h3>
+
+<p>
+    @*@Html.ActionLink("添加员工", "AddUser", "Dept", null, new { @class = "btn btn-default" })*@
+</p>
+@*@Html.ActionLink("添加部门", "Add", "Account", null, new { @class = "btn btn-default" })*@
+
+<form id="form" class="form-horizontal" method="post">
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(a => a.DeptId)
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @*@Html.LabelFor(model => model.Id, htmlAttributes: new { @class = "control-label col-md-1" })
+            <div class="col-md-2">
+                <div class="input-group date col-md-12">
+                    @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+
+            @Html.LabelFor(model => model.DeptName, htmlAttributes: new { @class = "control-label col-md-1" })
+            <div class="col-md-2">
+                <div class="input-group date col-md-12">
+                    @Html.EditorFor(model => model.DeptName, new { htmlAttributes = new { @class = "form-control", @disabled = "disables" } })
+                </div>
+            </div>*@
+
+            @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                <div class="input-group date col-md-12">
+                    @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <input type="button" value="查询" class="btn btn-default" id="submit" />
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<table id="list"></table>
+
+

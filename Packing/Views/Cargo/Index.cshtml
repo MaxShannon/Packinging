@@ -1,0 +1,204 @@
+﻿@model DbEfModel.CargoViewModel
+@{
+    ViewBag.Title = "产品管理";
+}
+
+@section Scripts {
+
+    <script src="~/Scripts/bootstrap-table.js"></script>
+    <link href="~/Content/bootstrap-table.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript">
+
+    $(function () {
+
+        var list = new TableInit();
+        list.Init();
+        $('#submit').click(function () {
+            list.Init();
+        });
+
+        $('#Excel').click(function () {
+            $.get('@Url.Action("ExcelCargo", "Cargo")',
+                {
+                    Id: $("input[name='Id']").val(),
+                    CargoName: $("input[name='CargoName']").val()
+                },
+                function (filePath) {
+                    //这里显示从服务器返回的数据
+                    var str = filePath;
+                    window.location.href = str;
+                }
+            );
+        });
+    });
+
+    var TableInit = function () {
+        var oTableInit = new Object();
+        //初始化Table
+        oTableInit.Init = function () {
+            $('#list').bootstrapTable("destroy");
+            $('#list').bootstrapTable({
+                url: '/Cargo/Index', //请求后台的URL（*）
+                method: 'Post', //请求方式（*）
+                toolbar: '#toolbar', //工具按钮用哪个容器
+                striped: true, //是否显示行间隔色
+                cache: true,
+                pagination: true, //是否显示分页（*）
+                sortable: true, //是否启用排序
+                sortOrder: "asc", //排序方式
+
+                sidePagination: "server", //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1, //初始化加载第一页，默认第一页
+                pageSize: 10, //每页的记录行数（*）
+                pageList: [10, 25, 50, 100], //可供选择的每页的行数（*）
+                //search: false,
+                contentType: "application/x-www-form-urlencoded",
+                strictSearch: true,
+                showColumns: true, //是否显示所有的列
+                showRefresh: true, //是否显示刷新按钮
+                minimumCountColumns: 2, //最少允许的列数
+                clickToSelect: true, //是否启用点击选中行
+                height: 670, //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "ID", //每一行的唯一标识，一般为主键列
+                showToggle: true, //是否显示详细视图和列表视图的切换按钮
+                cardView: false, //是否显示详细视图
+                detailView: false, //是否显示父子表
+                columns: [
+                    //{
+                    //    checkbox: true,
+                    //    visible: true
+                    //},
+                  
+                    {
+                        field: 'CargoName',
+                        title: '产品'
+                    },
+                    //{
+                    //    field: 'Unit',
+                    //    title: '吨/袋'
+                    //},
+                    {
+                        field: 'Weight',
+                        title: '当前库存(吨)'
+                    },
+                    //{
+                    //    field: 'CargoCount',
+                    //    title: 'CargoCount'
+                    //},
+                    //{
+                    //    field: 'CargoInName',
+                    //    title: 'CargoInName'
+                    //},
+                    //{
+                    //    field: 'Type',
+                    //    title: '型号'
+                    //},
+                    {
+                        field: 'TopCargoName',
+                        title: '上级产品'
+                    },
+                    {
+                        field: 'HuotName',
+                        title: '货台'
+                    },
+                    //{
+                    //    field: 'CatName2',
+                    //    title: 'CatName2'
+                    //},
+                    {
+                        field: 'operate',
+                        title: '操作',
+                        formatter: function (value, row, index) { //赋予的参数
+                            var str = '';
+                            if (row.FillList == true) {
+                                str += '<a class="btn btn-info" href="/Cargo/StorageIncomingCreate?id=' + row.Huom2Id + '">入库</a>';
+                                str += '<a class="btn btn-info" href="/Cargo/StorageShippingCreate?id=' + row.Huom2Id + '">出库</a>';
+                            }
+
+                            str += '<a class="btn btn-info" href="/Cargo/Details?id=' + row.Huom2Id + '">明细</a>';
+                            //str += '<a class="btn btn-info" href="/Shipment/Index?cargoId=' + row.Id + '">批号</a>';
+                            if (row.CargoCount === 0) {
+                                //str += '<a class="btn btn-warning" href="Cargo/Delete?id=' + row.Id + '">删除</a>';
+                            }
+                            return str;
+                        } //自定义方法，添加操作按钮
+                    }
+                ],
+
+                rowStyle: function (row, index) {
+                    var classesArr = ['success', 'info'];
+                    var rowStyle;
+                    if (index % 2 === 0) { //偶数行
+                        rowStyle = classesArr[0];
+                    } else { //奇数行
+                        rowStyle = classesArr[1];
+                    }
+                    return { classes: rowStyle };
+                }, //隔行变色
+
+                queryParams: function (params) {
+                    var temp = { //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                        limit: params.limit, //页面大小
+                        offset: params.offset,
+                        sort: params.sort,
+                        sortOrder: params.order, //排位命令（desc，asc）
+                        Id: $("#Id").val(),
+                        CargoName: $("#CargoName").val(),
+                        Huom2Id: $("#Huom2Id").val()
+
+                    };
+                    return temp;
+                }
+            });
+        };
+        return oTableInit;
+    };
+
+
+
+    </script>
+}
+
+
+
+<h2>@ViewBag.Title</h2>
+
+@*@if (ViewBag.PrivilegeId == 1 || ViewBag.PrivilegeId == 2)
+{
+    <p>
+        @Html.ActionLink("添加产品", "Create", "Cargo", null, new { @class = "btn btn-default" })
+    </p>
+}*@
+
+
+
+<form id="form" class="form-horizontal" method="post">
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+    
+            @Html.LabelFor(model => model.CargoName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                <div class="input-group date col-md-9">
+                    @Html.DropDownListFor(model => model.Huom2Id, (IEnumerable<SelectListItem>)ViewBag.CargoName, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <input type="button" value="查询" class="btn btn-default" id="submit" />
+                <a href="/Cargo/ShipOrder" class="btn btn-default">出库单</a>
+                @*<button class="btn btn-default" id="assemble">汇总</button>*@
+                @*<input type="button" value="导出日报" class="btn btn-primary" id="Excel" />*@
+            </div>
+        </div>
+
+    </div>
+</form>
+
+
+<table id="list"></table>
+
+

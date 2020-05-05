@@ -1,0 +1,83 @@
+﻿@model Packing.Models.CargoInfoViewModel
+@{
+    ViewBag.Title = "还原";
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+    $(function () {
+        $('#submit').click(function () {
+            $.ajax({
+                url: '@Url.Action("Back2")',
+                type: "Post",
+                data: $('#form').serialize(),
+                success: function (data) {
+                    if (data.success === 'success') {
+                        window.location.href = '@Url.Action("Index")';
+                        alert(data.message);
+                    }
+                    if (data.success === 'fail') {
+                        alert(data.message);
+                    }
+                },
+                error: function (data) {
+                    alert(data);
+                }
+            });
+        });
+    });
+    </script>
+
+}
+<h2>
+    @ViewBag.Title @if (Model.IsIncome == true)
+    {
+        <small>入库信息</small>
+    }
+    else
+    {
+        <small>出库信息</small>
+    }
+</h2>
+
+<form id="form" class="form-horizontal" method="post">
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(c => c.CargoLogId)
+    <div class="form-horizontal">
+        <h4>记录信息</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.CargoName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CargoName, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+                @Html.HiddenFor(model => model.CargoName)
+                @Html.ValidationMessageFor(model => model.CargoName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.ChangeCount, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ChangeCount, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+            </div>
+        </div>
+
+
+        @*<div class="form-group">
+                @Html.LabelFor(m => m.Type, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.EditorFor(m => m.Type, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="还原" class="btn btn-default" id="submit" />
+            </div>
+        </div>
+    </div>
+</form>

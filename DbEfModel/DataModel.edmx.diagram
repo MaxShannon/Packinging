@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="27b639dc759b4c4ea8c0778dc2a700d1" Name="Diagram1">
+        <EntityTypeShape EntityType="jhglModel1.CargoHuotInfoes" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="jhglModel1.CargoInfoes" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="jhglModel1.CargoInInfoes" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="jhglModel1.CargoLogInfoes" Width="1.5" PointX="2.75" PointY="3.75" />
+        <EntityTypeShape EntityType="jhglModel1.CargoOutOrderInfoes" Width="1.5" PointX="4.75" PointY="0.75" />
+        <EntityTypeShape EntityType="jhglModel1.cheh" Width="1.5" PointX="4.75" PointY="3.75" />
+        <EntityTypeShape EntityType="jhglModel1.dw" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="jhglModel1.huom" Width="1.5" PointX="6.75" PointY="4.75" />
+        <EntityTypeShape EntityType="jhglModel1.huom2" Width="1.5" PointX="0.75" PointY="7.75" />
+        <EntityTypeShape EntityType="jhglModel1.huot" Width="1.5" PointX="8.75" PointY="0.75" />
+        <EntityTypeShape EntityType="jhglModel1.HuotHuomInfoes" Width="1.5" PointX="8.75" PointY="4.75" />
+        <EntityTypeShape EntityType="jhglModel1.lx" Width="1.5" PointX="6.75" PointY="8.75" />
+        <EntityTypeShape EntityType="jhglModel1.ShipmentHuotInfoes" Width="1.5" PointX="8.75" PointY="7.75" />
+        <EntityTypeShape EntityType="jhglModel1.ShipmentInfoes" Width="1.5" PointX="10.75" PointY="0.75" />
+        <EntityTypeShape EntityType="jhglModel1.sys_ry" Width="1.5" PointX="0.75" PointY="10.75" />
+        <EntityTypeShape EntityType="jhglModel1.CargoView" Width="1.5" PointX="10.75" PointY="3.75" />
+        <EntityTypeShape EntityType="jhglModel1.HuotView" Width="1.5" PointX="10.75" PointY="8.75" />
+        <EntityTypeShape EntityType="jhglModel1.ShipmentView" Width="1.5" PointX="7.375" PointY="11.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

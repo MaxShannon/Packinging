@@ -1,0 +1,82 @@
+﻿@model Packing.Models.UserViewModel
+@{
+    ViewBag.Title = "删除人员信息";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(function () {
+            $('#submit').click(function () {
+                $.ajax({
+                    url: '@Url.Action("Delete")',
+                    type: "Post",
+                    data: $('#form').serialize(),
+                    success: function (data) {
+                        if (data.success === 'success') {
+                            window.location.href = '@Url.Action("Index")';
+                            alert(data.message);
+                        }
+                        if (data.success === 'fail') {
+                            alert(data.message);
+                        }
+                    },
+                    error: function (data) {
+                        alert(data);
+                    }
+                });
+            });
+        });
+    </script>
+
+}
+
+
+<h2>@ViewBag.Title</h2>
+
+<form id="form" class="form-horizontal" method="post">
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Id)
+    <input type="hidden" name="id" value="">
+    <div class="form-horizontal">
+        <h4>产品信息</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", @disabled = "disables" } })
+
+            </div>
+        </div>
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.DeptName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DeptName, new { htmlAttributes = new { @class = "form-control", @disabled = "disables" } })
+
+            </div>
+        </div>
+
+        @*<div class="form-group">
+            @Html.LabelFor(model => model.PrivilegeId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.PrivilegeId, (IEnumerable<SelectListItem>)ViewBag.PrivilegeName, new { @class = "form-control", @disabled = "disables" })
+            </div>
+        </div>*@
+
+     
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="删除" class="btn btn-default" id="submit" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    @Html.ActionLink("返回", "Index")
+</div>
+

@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ZDCZ_SLModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="pihao">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DHLS" Type="int" />
+          <Property Name="PH_NO" Type="nvarchar" MaxLength="50" />
+          <Property Name="PH_ZL" Type="float" />
+          <Property Name="tihuolx" Type="nchar" MaxLength="10" />
+          <Property Name="qianfa" Type="nchar" MaxLength="10" />
+          <Property Name="sj" Type="nvarchar" MaxLength="50" />
+          <Property Name="del" Type="int" Nullable="false" />
+          <Property Name="IsChecked" Type="bit" Nullable="false" />
+          <Property Name="InspectId" Type="varchar" MaxLength="50" />
+          <Property Name="InspectTime" Type="datetime" />
+          <Property Name="HuotId" Type="int" />
+          <Property Name="del_time" Type="nvarchar" MaxLength="50" />
+          <Property Name="del_Name" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <EntityContainer Name="ZDCZ_SLModelStoreContainer">
+          <EntitySet Name="pihao" EntityType="Self.pihao" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ZDCZ_SLModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="ZDCZ_SLEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="pihao" EntityType="ZDCZ_SLModel.pihao" />
+        </EntityContainer>
+        <EntityType Name="pihao">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DHLS" Type="Int32" />
+          <Property Name="PH_NO" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PH_ZL" Type="Double" />
+          <Property Name="tihuolx" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="qianfa" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="sj" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="del" Type="Int32" Nullable="false" />
+          <Property Name="IsChecked" Type="Boolean" Nullable="false" />
+          <Property Name="InspectId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="InspectTime" Type="DateTime" Precision="3" />
+          <Property Name="HuotId" Type="Int32" />
+          <Property Name="del_time" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="del_Name" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ZDCZ_SLModelStoreContainer" CdmEntityContainer="ZDCZ_SLEntities">
+          <EntitySetMapping Name="pihao">
+            <EntityTypeMapping TypeName="ZDCZ_SLModel.pihao">
+              <MappingFragment StoreEntitySet="pihao">
+                <ScalarProperty Name="del_Name" ColumnName="del_Name" />
+                <ScalarProperty Name="del_time" ColumnName="del_time" />
+                <ScalarProperty Name="HuotId" ColumnName="HuotId" />
+                <ScalarProperty Name="InspectTime" ColumnName="InspectTime" />
+                <ScalarProperty Name="InspectId" ColumnName="InspectId" />
+                <ScalarProperty Name="IsChecked" ColumnName="IsChecked" />
+                <ScalarProperty Name="del" ColumnName="del" />
+                <ScalarProperty Name="sj" ColumnName="sj" />
+                <ScalarProperty Name="qianfa" ColumnName="qianfa" />
+                <ScalarProperty Name="tihuolx" ColumnName="tihuolx" />
+                <ScalarProperty Name="PH_ZL" ColumnName="PH_ZL" />
+                <ScalarProperty Name="PH_NO" ColumnName="PH_NO" />
+                <ScalarProperty Name="DHLS" ColumnName="DHLS" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
