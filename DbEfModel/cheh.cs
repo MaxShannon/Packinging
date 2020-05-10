@@ -52,5 +52,10 @@ namespace DbEfModel
         public Nullable<int> sfmydts { get; set; }
         public Nullable<int> sjpx { get; set; }
         public string sj_pk { get; set; }
+        public string khname { get; set; }
+        public Nullable<int> khuserId { get; set; }
+        public string zczl { get; set; }
+        public int err { get; set; }
+        public string err_str { get; set; }
     }
 }

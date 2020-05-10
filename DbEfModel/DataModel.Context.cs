@@ -25,8 +25,6 @@ namespace DbEfModel
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<CargoHuotInfoes> CargoHuotInfoes { get; set; }
-        public virtual DbSet<CargoInfoes> CargoInfoes { get; set; }
         public virtual DbSet<CargoInInfoes> CargoInInfoes { get; set; }
         public virtual DbSet<CargoLogInfoes> CargoLogInfoes { get; set; }
         public virtual DbSet<CargoOutOrderInfoes> CargoOutOrderInfoes { get; set; }
@@ -37,11 +35,13 @@ namespace DbEfModel
         public virtual DbSet<huot> huot { get; set; }
         public virtual DbSet<HuotHuomInfoes> HuotHuomInfoes { get; set; }
         public virtual DbSet<lx> lx { get; set; }
-        public virtual DbSet<ShipmentHuotInfoes> ShipmentHuotInfoes { get; set; }
-        public virtual DbSet<ShipmentInfoes> ShipmentInfoes { get; set; }
         public virtual DbSet<sys_ry> sys_ry { get; set; }
         public virtual DbSet<CargoView> CargoView { get; set; }
         public virtual DbSet<HuotView> HuotView { get; set; }
         public virtual DbSet<ShipmentView> ShipmentView { get; set; }
+        public virtual DbSet<CargoInfoes> CargoInfoes { get; set; }
+        public virtual DbSet<CargoHuotInfoes> CargoHuotInfoes { get; set; }
+        public virtual DbSet<ShipmentHuotInfoes> ShipmentHuotInfoes { get; set; }
+        public virtual DbSet<ShipmentInfoes> ShipmentInfoes { get; set; }
     }
 }

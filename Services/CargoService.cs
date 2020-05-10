@@ -197,6 +197,7 @@ namespace Services
             var cargo = _db.CargoInfoes.First(a => a.Huom2Id == huom2Id);
             var shipment = _db.ShipmentInfoes.First(a => a.Id == shipmentId);
             var shipmentHuotInfoes = _db.ShipmentHuotInfoes.First(a => a.ShipmentId == shipment.Id && a.HuotId == huotId);
+            var cargoHuot = _db.CargoHuotInfoes.First(a => a.CargoId == cargo.Id && a.HuotId == huotId);
 
             cargo.Weight -= changeWeight;
             _db.Entry(cargo).Property(c => c.Weight).IsModified = true;
@@ -204,8 +205,10 @@ namespace Services
             _db.Entry(shipment).Property(c => c.Weight).IsModified = true;
             shipmentHuotInfoes.Weight -= changeWeight;
             _db.Entry(shipmentHuotInfoes).Property(c => c.Weight).IsModified = true;
+            cargoHuot.Weight -= changeWeight;
+            _db.Entry(cargoHuot).Property(c => c.Weight).IsModified = true;
 
-            if (cargo.Weight < 0 || shipment.Weight < 0 || shipmentHuotInfoes.Weight < 0)
+            if (cargo.Weight < 0 || shipment.Weight < 0 || shipmentHuotInfoes.Weight < 0 || cargoHuot.Weight < 0)
             {
                 return false;
             }
@@ -319,6 +322,7 @@ namespace Services
 
         public IEnumerable<CargoViewModel> GetShipment(int huom2Id)
         {
+            CheckCargo(huom2Id);
             var cargo = _db.CargoInfoes.FirstOrDefault(a => a.Huom2Id == huom2Id);
             var shipmentList = _db.ShipmentInfoes.Where(a => a.CargoId == cargo.Id).Select(a => new CargoViewModel
             {
@@ -341,6 +345,10 @@ namespace Services
 
         public void CheckCargo(int id)
         {
+            if (id == 0)
+            {
+                return;
+            }
             var huom2 = _db.huom2.Find(id);
             var cargo = _db.CargoInfoes.FirstOrDefault(a => a.Huom2Id == id);
             if (cargo == null)
@@ -357,48 +365,90 @@ namespace Services
 
         public IEnumerable<CargoViewModel> GetCargoLog(int huom2Id, int stateId, DateTime timeStart, DateTime timeEnd, string userId, int? isIncome, int? huotId)
         {
-            //select* from sys_ry
-            //    join dw on sys_ry.dwid = dw.id
-            //join huot c on sys_ry.dwid = c.dwid
-            //join CargoLogInfoes d on c.id = d.HuotId
-            //join ShipmentInfoes e on d.ShipmentId = e.Id
-            //join CargoInfoes f on d.CargoId = f.Id
-            //join huom2 g on f.Huom2Id = g.id
-            //join huom h on g.huomid = h.id
-            //where sys_ry.id = 31 and d.StateId = 1
+            var user = _db.sys_ry.Find(userId);
+            IQueryable<CargoViewModel> list;
+            if (IsInOut(user))
+            {
+                list = (
+                    from cargoLogInfoes in _db.CargoLogInfoes
+                    join sys_ry in _db.sys_ry on cargoLogInfoes.HuotId equals sys_ry.htid
+                    join cargoInfoes in _db.CargoInfoes on cargoLogInfoes.CargoId equals cargoInfoes.Id
+                    join huom2 in _db.huom2 on cargoInfoes.Huom2Id equals huom2.id
+                    join huom in _db.huom on huom2.huomid equals huom.id
+                    join shipmentInfoes in _db.ShipmentInfoes on cargoLogInfoes.ShipmentId equals shipmentInfoes.Id
+                    join cargoInInfoes in _db.CargoInInfoes on cargoLogInfoes.CargoInId equals cargoInInfoes.Id
+                        into cargoInInfoesJoin
+                    from cargoInInfoes in cargoInInfoesJoin.DefaultIfEmpty()
+                    join huot in _db.huot on cargoLogInfoes.HuotId equals huot.id
+                    select new CargoViewModel
+                    {
+                        CargoLogId = cargoLogInfoes.Id,
+                        TopCargoName = huom.name,
+                        CargoName = huom2.name,
+                        Huom2Id = huom2.id,
+                        Weight = cargoInfoes == null ? 0 : cargoInfoes.Weight,
+                        IsOk = sys_ry.lx == _lxCheckId,
+                        UserId = sys_ry.pk,
+                        ChangeWeight = cargoLogInfoes.ChangeWeight,
+                        StateId = cargoLogInfoes.StateId,
+                        ShipmentNo = shipmentInfoes.ShipmentNo,
+                        CargoInName = cargoInInfoes.CargoInName,
+                        HuotName = huot.name,
+                        Time = (DateTime)cargoLogInfoes.InspectTime,
+                        Desc = cargoLogInfoes.Desc,
+                        IsIncome = (bool)cargoLogInfoes.IsIncome,
+                        HuotId = huot.id,
+                        InspectName = cargoLogInfoes.InspectName,
+                    }
+               ).Where(a => a.UserId == userId);
+            }
+            else
+            {
+                //select* from sys_ry
+                //    join dw on sys_ry.dwid = dw.id
+                //join huot c on sys_ry.dwid = c.dwid
+                //join CargoLogInfoes d on c.id = d.HuotId
+                //join ShipmentInfoes e on d.ShipmentId = e.Id
+                //join CargoInfoes f on d.CargoId = f.Id
+                //join huom2 g on f.Huom2Id = g.id
+                //join huom h on g.huomid = h.id
+                //where sys_ry.id = 31 and d.StateId = 1
+                list = (
+                    from sys_ry in _db.sys_ry
+                    join dw in _db.dw on sys_ry.dwid equals dw.id
+                    join huot in _db.huot on sys_ry.dwid equals huot.dwid
+                    join cargoLogInfoes in _db.CargoLogInfoes on huot.id equals cargoLogInfoes.HuotId
+                    join cargoInInfoes in _db.CargoInInfoes on cargoLogInfoes.CargoInId equals cargoInInfoes.Id
+                        into cargoInInfoesJoin
+                    from cargoInInfoes in cargoInInfoesJoin.DefaultIfEmpty()
+                    join shipmentInfoes in _db.ShipmentInfoes on cargoLogInfoes.ShipmentId equals shipmentInfoes.Id
+                    join cargoInfoes in _db.CargoInfoes on cargoLogInfoes.CargoId equals cargoInfoes.Id
+                    join huom2 in _db.huom2 on cargoInfoes.Huom2Id equals huom2.id
+                    join huom in _db.huom on huom2.huomid equals huom.id
+                    select new CargoViewModel
+                    {
+                        CargoLogId = cargoLogInfoes.Id,
+                        TopCargoName = huom.name,
+                        CargoName = huom2.name,
+                        Huom2Id = huom2.id,
+                        Weight = cargoInfoes == null ? 0 : cargoInfoes.Weight,
+                        IsOk = sys_ry.lx == _lxCheckId,
+                        UserId = sys_ry.pk,
+                        ChangeWeight = cargoLogInfoes.ChangeWeight,
+                        StateId = cargoLogInfoes.StateId,
+                        ShipmentNo = shipmentInfoes.ShipmentNo,
+                        CargoInName = cargoInInfoes.CargoInName,
+                        HuotName = huot.name,
+                        Time = (DateTime)cargoLogInfoes.InspectTime,
+                        Desc = cargoLogInfoes.Desc,
+                        IsIncome = (bool)cargoLogInfoes.IsIncome,
+                        HuotId = huot.id,
+                        InspectName = cargoLogInfoes.InspectName,
+                    }).Where(a => a.UserId == userId);
+            }
 
-            var list = (
-                from sys_ry in _db.sys_ry
-                join dw in _db.dw on sys_ry.dwid equals dw.id
-                join huot in _db.huot on sys_ry.dwid equals huot.dwid
-                join cargoLogInfoes in _db.CargoLogInfoes on huot.id equals cargoLogInfoes.HuotId
-                join cargoInInfoes in _db.CargoInInfoes on cargoLogInfoes.CargoInId equals cargoInInfoes.Id
-                    into cargoInInfoesJoin
-                from cargoInInfoes in cargoInInfoesJoin.DefaultIfEmpty()
-                join shipmentInfoes in _db.ShipmentInfoes on cargoLogInfoes.ShipmentId equals shipmentInfoes.Id
-                join cargoInfoes in _db.CargoInfoes on cargoLogInfoes.CargoId equals cargoInfoes.Id
-                join huom2 in _db.huom2 on cargoInfoes.Huom2Id equals huom2.id
-                join huom in _db.huom on huom2.huomid equals huom.id
-                select new CargoViewModel
-                {
-                    CargoLogId = cargoLogInfoes.Id,
-                    TopCargoName = huom.name,
-                    CargoName = huom2.name,
-                    Huom2Id = huom2.id,
-                    Weight = cargoInfoes == null ? 0 : cargoInfoes.Weight,
-                    IsOk = sys_ry.lx == _lxCheckId,
-                    UserId = sys_ry.pk,
-                    ChangeWeight = cargoLogInfoes.ChangeWeight,
-                    StateId = cargoLogInfoes.StateId,
-                    ShipmentNo = shipmentInfoes.ShipmentNo,
-                    CargoInName = cargoInInfoes.CargoInName,
-                    HuotName = huot.name,
-                    Time = (DateTime)cargoLogInfoes.InspectTime,
-                    Desc = cargoLogInfoes.Desc,
-                    IsIncome = (bool)cargoLogInfoes.IsIncome,
-                    HuotId = huot.id,
-                    InspectName = cargoLogInfoes.InspectName,
-                }).Where(a => a.UserId == userId);
+
+
 
 
             if (stateId != 0)
@@ -469,14 +519,12 @@ namespace Services
 
             else
             {
-                //select * from sys_ry
-                //join huot c on sys_ry.dwid = c.dwid
-                //join ShipmentHuotInfoes b on c.id = b.HuotId
-                //join ShipmentInfoes d on b.ShipmentId = d.Id
-                //join CargoInfoes e on d.CargoId = e.Id
-                //join huom2 f on e.Huom2Id = f.id
-                //join huom g on f.huomid = g.id
-                //where sys_ry.id = 33
+                //select* from ShipmentInfoes
+                //    join CargoInfoes on ShipmentInfoes.CargoId = CargoInfoes.Id
+                //join ShipmentHuotInfoes on ShipmentInfoes.Id = ShipmentHuotInfoes.ShipmentId
+                //join huot on ShipmentHuotInfoes.HuotId = huot.id
+                //join sys_ry on sys_ry.dwid = huot.dwid
+                //where ShipmentHuotInfoes.HuotId = 2 and CargoInfoes.Id = 9 and sys_ry.pk = '1bba0a9b-8ce0-4f82-ad1c-292672a696a4'
                 // 很多货台
                 list = (
                     from sys_ry in _db.sys_ry
@@ -524,7 +572,10 @@ namespace Services
             //        //IsChecked = shipmentHuotInfoes.IsChecked,
             //        //MissDuTime = shipmentHuotInfoes.sj
             //    }).Where(a => a.HuotId == huotId && a.UserId == userId);
-
+            if (cargoId != 0)
+            {
+                list = list.Where(a => a.CargoId == cargoId);
+            }
             if (huotId != 0)
             {
                 list = list.Where(a => a.HuotId == huotId);
@@ -609,6 +660,7 @@ namespace Services
             var shipment = _db.ShipmentInfoes.FirstOrDefault(a => a.ShipmentNo == shipmentView.PH_NO);
             var cargo = _db.CargoInfoes.Find(shipment.CargoId);
             var shipmentHuot = _db.ShipmentHuotInfoes.First(a => a.HuotId == (int)shipmentView.HuotId && a.ShipmentId == shipment.Id);
+            var cargoHuot = _db.CargoHuotInfoes.First(a => a.HuotId == shipmentView.HuotId && a.CargoId == cargo.Id);
 
             shipmentView.InspectId = userId;
             shipmentView.InspectTime = DateTime.Now;
@@ -623,7 +675,9 @@ namespace Services
 
             shipmentHuot.Weight -= (decimal)shipmentView.PH_ZL;
 
-            if (cargo.Weight < 0 || shipment.Weight < 0 || shipmentHuot.Weight < 0)
+            cargoHuot.Weight -= (decimal)shipmentView.PH_ZL;
+
+            if (cargo.Weight < 0 || shipment.Weight < 0 || shipmentHuot.Weight < 0 || cargoHuot.Weight < 0)
             {
                 return false;
             }
@@ -656,7 +710,7 @@ namespace Services
         {
             var user = _db.sys_ry.Find(userId);
             IQueryable<CargoViewModel> temp;
-            if (IsInOut(user))
+            if (IsInOut(user))//包装 (入库)
             {
                 if (IsCanSeeAll(user))
                 {
@@ -673,14 +727,14 @@ namespace Services
                 else
                 {
                     temp = (
-                  from sys_ry in _db.sys_ry
-                  join huot in _db.huot on sys_ry.htid equals huot.id
-                  select new CargoViewModel
-                  {
-                      HuotId = huot.id,
-                      HuotName = huot.name,
-                      UserId = sys_ry.pk
-                  });
+                        from sys_ry in _db.sys_ry
+                        join huot in _db.huot on sys_ry.htid equals huot.id
+                        select new CargoViewModel
+                        {
+                            HuotId = huot.id,
+                            HuotName = huot.name,
+                            UserId = sys_ry.pk
+                        });
                 }
 
             }
