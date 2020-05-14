@@ -508,7 +508,7 @@ namespace Services
                        CargoName = huom2.name,
                        Huom2Id = huom2.id,
                        HuotName = huot.name,
-                       Weight = cargoInfoes == null ? 0 : cargoInfoes.Weight,
+                       Weight = shipmentHuotInfoes == null ? 0 : shipmentHuotInfoes.Weight,
                        FillList = sys_ry.lx == _lxId || sys_ry.lx == _lxId2, // 8,9 包装货台包装都可以
                        UserId = sys_ry.pk,
                        HuotId = huot.id,
@@ -540,7 +540,7 @@ namespace Services
                         CargoName = huom2.name,
                         Huom2Id = huom2.id,
                         HuotName = huot.name,
-                        Weight = cargoInfoes == null ? 0 : cargoInfoes.Weight,
+                        Weight = shipmentHuotInfoes == null ? 0 : shipmentHuotInfoes.Weight,
                         FillList = sys_ry.lx == _lxId || sys_ry.lx == _lxId2, // 8,9 包装货台包装都可以
                         UserId = sys_ry.pk,
                         HuotId = huot.id,

@@ -192,7 +192,6 @@
     <Content Include="img\logo.png" />
     <Content Include="img\small.png" />
     <Content Include="img\small_tm.png" />
-    <Content Include="img\title.png" />
     <Content Include="img\仓库.jpg" />
     <Content Include="Package\EntityFramework.dll" />
     <Content Include="Package\EntityFramework.SqlServer.dll" />
