@@ -12,10 +12,10 @@ namespace DbEfModel
     using System;
     using System.Collections.Generic;
     
-    public partial class lx
+    public partial class webdddl
     {
-        public int id { get; set; }
-        public string name { get; set; }
-        public Nullable<int> sx { get; set; }
+        public string c_uuid { get; set; }
+        public string c_ry { get; set; }
+        public Nullable<long> n_time { get; set; }
     }
 }
