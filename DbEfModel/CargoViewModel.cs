@@ -143,5 +143,8 @@ namespace DbEfModel
         public int? WeightFlag { get; set; }
 
         public double WeightDu { get; set; }
+
+        [Display(Name = "袋重")]
+        public string PackName { get; set; }
     }
 }

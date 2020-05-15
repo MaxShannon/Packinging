@@ -282,6 +282,13 @@ namespace Packing.Controllers
             var huotList = _cargoService.GetUserHuot(LoginUser.pk);
             ViewBag.HuotName = new SelectList(huotList, "HuotId", "HuotName", 1);
             ViewBag.ShipmentName = new SelectList(shipmentList, "ShipmentId", "ShipmentNo", 1);
+
+            var pack = new List<object>();
+            pack.Add(new { Id = 0, Weight = 0 });
+            pack.Add(new { Id = 25, Weight = 25 });
+            pack.Add(new { Id = 50, Weight = 50 });
+            pack.Add(new { Id = 100, Weight = 100 });
+            ViewBag.PackName = new SelectList(pack, "Id", "Weight", 1);
             //ViewBag.CargoInName = new SelectList(_db.CargoInInfo, "Id", "CargoInName", 3);
             return View(model);
         }
@@ -295,7 +302,11 @@ namespace Packing.Controllers
             }
             if (cargoViewModel.ChangeWeight == 0)
             {
-                return Json(new { success = "fail", message = "入库产品不能为0" });
+                cargoViewModel.ChangeWeight = cargoViewModel.Weight * cargoViewModel.CargoCount;
+                if (cargoViewModel.ChangeWeight == 0)
+                {
+                    return Json(new { success = "fail", message = "入库产品不能为0" });
+                }
             }
             if (Session["LoginUser"] == null)
             {

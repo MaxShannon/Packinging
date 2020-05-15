@@ -34,12 +34,29 @@
                 });
             });
 
+
+            $("#weight").show()
+            $("#pack1").hide()
+            $("#pack2").hide()
+
         });
 
-        $('#shipmentId').change(function(e) {
-            var shipNo = $('#shipmentId').value
-            console.log(shipNo)
-            $('#ShipmentNo').value(shipNo)
+      
+
+        $("input[name=way]").click(function() {
+            var way = $(this).val();
+            if (way == 1) {
+                $("#weight").show()
+                $("#pack1").hide()
+                $("#pack2").hide()
+                $("#CargoCount").val("0")
+                $("#Weight").val("0")
+            } else {
+                $("#weight").hide()
+                $("#ChangeWeight").val("0")
+                $("#pack1").show()
+                $("#pack2").show()
+            }
         });
 
 
@@ -65,6 +82,11 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <label class = "control-label col-md-3"><input type="radio" name="way" value="1" checked="checked">重量</label>
+            <label class = "control-label "><input type="radio" name="way" value="2">包数</label>
+        </div>
+
         @*<div class="form-group">
                 @Html.LabelFor(m => m.ShipmentNo, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
@@ -83,12 +105,27 @@
 
                 </div>
             </div>*@
-        
 
-        <div class="form-group">
+
+        <div class="form-group" id="weight">
             @Html.LabelFor(m => m.ChangeWeight, new { @class = "col-md-2 control-label" })
             <div class="col-md-10">
                 @Html.TextBoxFor(m => m.ChangeWeight, new { @class = "form-control" })
+
+            </div>
+        </div>
+        
+        <div class="form-group" id="pack1">
+            @Html.LabelFor(m => m.PackName, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(m=>m.Weight,(IEnumerable<SelectListItem>)ViewBag.PackName, new { @class = "form-control" })
+            </div>
+        </div>
+        
+        <div class="form-group" id="pack2">
+            @Html.LabelFor(m => m.CargoCount, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.CargoCount, new { @class = "form-control" })
 
             </div>
         </div>
