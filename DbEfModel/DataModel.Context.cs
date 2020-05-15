@@ -43,5 +43,6 @@ namespace DbEfModel
         public virtual DbSet<CargoHuotInfoes> CargoHuotInfoes { get; set; }
         public virtual DbSet<ShipmentHuotInfoes> ShipmentHuotInfoes { get; set; }
         public virtual DbSet<ShipmentInfoes> ShipmentInfoes { get; set; }
+        public virtual DbSet<webdddl> webdddl { get; set; }
     }
 }

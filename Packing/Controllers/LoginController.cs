@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using DbEfModel;
+using NPOI.OpenXmlFormats.Wordprocessing;
 
 namespace Packing.Controllers
 {
@@ -10,25 +11,41 @@ namespace Packing.Controllers
 
         private readonly jhglEntities _db = new jhglEntities();
 
- 
+
         public ActionResult Index()
         {
             return View();
         }
 
-        [HttpPost]
-        public ActionResult Login(UserViewModel sys_ry)
+        [HttpGet]
+        public ActionResult Login(string webtoken)
         {
-        
-            var userInfoNew = _db.sys_ry.FirstOrDefault(u => u.username == sys_ry.UserName);
-            if (userInfoNew != null && userInfoNew.password == sys_ry.Password)
+            var webId = _db.webdddl.Find(webtoken);
+            var userInfoNew = _db.sys_ry.Find(webId.c_ry);
+            _db.webdddl.Remove(webId);
+            _db.SaveChanges();
+            //return Redirect("http://10.28.212.1:8680/");
+            if (JudgeLoger(userInfoNew))
             {
-                Session["LoginUser"] = userInfoNew;
-
-                return Json(new { success = "success", message = "登陆成功" });
+                return RedirectToAction("Index", "cargo");
             }
-            return Json(new { success = "fail", message = "登陆失败" });
+            //return Json(new { success = "fail", message = "登陆失败" });
+            return Redirect("http://10.28.212.1:8680/");
         }
+
+        //[HttpPost]
+        //public ActionResult Login(UserViewModel sys_ry)
+        //{
+
+        //    var userInfoNew = _db.sys_ry.FirstOrDefault(u => u.username == sys_ry.UserName);
+        //    if (userInfoNew != null && userInfoNew.password == sys_ry.Password)
+        //    {
+        //        Session["LoginUser"] = userInfoNew;
+
+        //        return Json(new { success = "success", message = "登陆成功" });
+        //    }
+        //    return Json(new { success = "fail", message = "登陆失败" });
+        //}
 
         public ActionResult LogOff()
         {
@@ -37,6 +54,19 @@ namespace Packing.Controllers
             return RedirectToAction("Index");
         }
 
+        private bool JudgeLoger(sys_ry userInfoNew)
+        {
+            if (userInfoNew != null)
+            {
+                if (userInfoNew.lx == 7 || userInfoNew.lx == 8 || userInfoNew.lx == 9)
+                {
+                    Session["LoginUser"] = userInfoNew;
 
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }
