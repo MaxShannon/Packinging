@@ -25,5 +25,7 @@ namespace DbEfModel
         public string InspectName { get; set; }
         public Nullable<System.DateTime> InspectTime { get; set; }
         public Nullable<bool> IsIncome { get; set; }
+        public Nullable<int> Count { get; set; }
+        public string WeightType { get; set; }
     }
 }

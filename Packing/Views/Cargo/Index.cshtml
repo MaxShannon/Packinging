@@ -126,16 +126,16 @@
                     }
                 ],
 
-                rowStyle: function (row, index) {
-                    var classesArr = ['success', 'info'];
-                    var rowStyle;
-                    if (index % 2 === 0) { //偶数行
-                        rowStyle = classesArr[0];
-                    } else { //奇数行
-                        rowStyle = classesArr[1];
-                    }
-                    return { classes: rowStyle };
-                }, //隔行变色
+                //rowStyle: function (row, index) {
+                //    var classesArr = ['success', 'info'];
+                //    var rowStyle;
+                //    if (index % 2 === 0) { //偶数行
+                //        rowStyle = classesArr[0];
+                //    } else { //奇数行
+                //        rowStyle = classesArr[1];
+                //    }
+                //    return { classes: rowStyle };
+                //}, //隔行变色
 
                 queryParams: function (params) {
                     var temp = { //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的

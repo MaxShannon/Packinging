@@ -4,9 +4,8 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="27b639dc759b4c4ea8c0778dc2a700d1" Name="Diagram1" ZoomLevel="99">
+      <Diagram DiagramId="27b639dc759b4c4ea8c0778dc2a700d1" Name="Diagram1" ZoomLevel="100">
         <EntityTypeShape EntityType="jhglModel1.CargoInInfoes" Width="1.5" PointX="0.75" PointY="3.75" />
-        <EntityTypeShape EntityType="jhglModel1.CargoLogInfoes" Width="1.5" PointX="2.75" PointY="3.75" />
         <EntityTypeShape EntityType="jhglModel1.CargoOutOrderInfoes" Width="1.5" PointX="4.75" PointY="0.75" />
         <EntityTypeShape EntityType="jhglModel1.cheh" Width="1.5" PointX="4.75" PointY="3.75" />
         <EntityTypeShape EntityType="jhglModel1.dw" Width="1.5" PointX="6.75" PointY="0.75" />
@@ -24,6 +23,7 @@
         <EntityTypeShape EntityType="jhglModel1.ShipmentHuotInfoes" Width="1.5" PointX="13.75" PointY="3.75" />
         <EntityTypeShape EntityType="jhglModel1.ShipmentInfoes" Width="1.5" PointX="3.75" PointY="13.75" />
         <EntityTypeShape EntityType="jhglModel1.webdddl" Width="1.5" PointX="13.375" PointY="6.75" />
+        <EntityTypeShape EntityType="jhglModel1.CargoLogInfoes" Width="1.5" PointX="13.375" PointY="9.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

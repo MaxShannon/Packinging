@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.WebPages;
-using DbEfModel;
+﻿using DbEfModel;
 using Packing.Models;
 using Services;
+using System;
+using System.Configuration;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace Packing.Controllers
 {
@@ -62,9 +58,7 @@ namespace Packing.Controllers
             var temp = _cargoService.GetCargoShipmentHuot(cargoViewModel.HuotId, 0, LoginUser.pk);
 
             var list = temp.ToList();
-            //select SUM(weight) from CargoAreaCargoInfo a
-            //    where a.CargoAreaId = 1 and a.Cargoid = 1
-            //group by a.shipmentNo
+    
             return Json(new { total = list.Count, rows = list.OrderByDescending(c => c.Weight).Skip((int)offset).Take((int)limit).ToList() });
         }
         #endregion

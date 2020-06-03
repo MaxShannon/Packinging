@@ -26,7 +26,6 @@ namespace DbEfModel
         }
     
         public virtual DbSet<CargoInInfoes> CargoInInfoes { get; set; }
-        public virtual DbSet<CargoLogInfoes> CargoLogInfoes { get; set; }
         public virtual DbSet<CargoOutOrderInfoes> CargoOutOrderInfoes { get; set; }
         public virtual DbSet<cheh> cheh { get; set; }
         public virtual DbSet<dw> dw { get; set; }
@@ -44,5 +43,6 @@ namespace DbEfModel
         public virtual DbSet<ShipmentHuotInfoes> ShipmentHuotInfoes { get; set; }
         public virtual DbSet<ShipmentInfoes> ShipmentInfoes { get; set; }
         public virtual DbSet<webdddl> webdddl { get; set; }
+        public virtual DbSet<CargoLogInfoes> CargoLogInfoes { get; set; }
     }
 }

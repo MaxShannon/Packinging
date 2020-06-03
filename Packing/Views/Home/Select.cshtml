@@ -5,36 +5,61 @@
 }
 
 @section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/moment.min.js"></script>
     <script src="~/Scripts/moment-with-locales.js"></script>
+    <script>
+        $(function () {
+            //changeProjectKind();
+            // $('select[id=ProjectKind]').change(changeProjectKind);
 
-    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+            $('#submit1').click(function() {
+                $.ajax({
+                    url: '@Url.Action("SelectIn")',
+                    type: "Post",
+                    data: $('#form1').serialize(),
+                    success: function (data) {
+                      
+                        console.log(data);
+                        $("#textDe").val(data)
+                        //if (data.success === 'success') {
 
-    <script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+                        //}
+                        //if (data.success === 'fail') {
+                        //    alert(data.message);
+                        //}
+                    },
+                    error: function(data) {
+                        alert(data);
+                    }
+                });
+            });
+            $('#submit2').click(function() {
+                $.ajax({
+                    url: '@Url.Action("SelectOut")',
+                    type: "Post",
+                    data: $('#form2').serialize(),
+                    success: function (data) {
+                        console.log(data)
+                    },
+                    error: function(data) {
+                        alert(data);
+                    }
+                });
+            });
 
-    <script src="~/Scripts/bootstrap-table.js"></script>
-    <link href="~/Content/bootstrap-table.css" rel="stylesheet" />
-    <script src="~/Scripts/bootstrap-table-zh-CN.js"></script>
+        });
+
+
+    </script>
+
 }
+<form id="form1" class="form-horizontal" method="post">
+    <input type="text" name="textEn" id="textEn" value="123" />
+    <input type="button" value="加密" id="submit1" />
+</form>
 
-
-
-<style type="text/css">
-    .form-control {
-        width:auto
-    }
-</style>
-<div class="form-group">
-    <div class="input-group col-xs-12">
-        <div class="input-group-btn">
-            <select name="type" class="form-control" style="width: auto;">
-                <option value="1">全网</option>
-                <option value="2">本站</option>
-            </select>
-        </div>
-        <input type="text" name="keyword" id="keyword" class="form-control" placeholder="请您输入关键词">
-        <span class="input-group-btn">
-            <button class="btn btn-success" id="search_submit" type="submit">Go</button>
-        </span>
-    </div>
-</div>
+<form id="form2" class="form-horizontal" method="post">
+    <input type="text" name="textDe" id="textDe" value="" />
+    <input type="button" value="解密" id="submit2" />
+</form>

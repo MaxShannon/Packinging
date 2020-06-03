@@ -57,5 +57,14 @@ namespace DbEfModel
         public string zczl { get; set; }
         public int err { get; set; }
         public string err_str { get; set; }
+        public Nullable<int> zcflag { get; set; }
+        public string ph { get; set; }
+        public string zcren { get; set; }
+        public string zcshij { get; set; }
+        public Nullable<int> zhaoh { get; set; }
+        public string zhaoh_yy { get; set; }
+        public string zhaoh_sj { get; set; }
+        public string zhaoh_p { get; set; }
+        public Nullable<int> dais { get; set; }
     }
 }

@@ -47,6 +47,8 @@
           <Property Name="InspectName" Type="nvarchar(max)" />
           <Property Name="InspectTime" Type="datetime" />
           <Property Name="IsIncome" Type="bit" />
+          <Property Name="Count" Type="int" />
+          <Property Name="WeightType" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="CargoOutOrderInfoes">
           <Key>
@@ -104,6 +106,15 @@
           <Property Name="zczl" Type="varchar" MaxLength="50" />
           <Property Name="err" Type="int" Nullable="false" />
           <Property Name="err_str" Type="varchar" MaxLength="255" />
+          <Property Name="zcflag" Type="int" />
+          <Property Name="ph" Type="varchar" MaxLength="50" />
+          <Property Name="zcren" Type="varchar" MaxLength="50" />
+          <Property Name="zcshij" Type="varchar" MaxLength="50" />
+          <Property Name="zhaoh" Type="int" />
+          <Property Name="zhaoh_yy" Type="nvarchar" MaxLength="50" />
+          <Property Name="zhaoh_sj" Type="nvarchar" MaxLength="50" />
+          <Property Name="zhaoh_p" Type="nvarchar" MaxLength="50" />
+          <Property Name="dais" Type="int" />
         </EntityType>
         <EntityType Name="dw">
           <Key>
@@ -132,6 +143,7 @@
           <Property Name="isxs" Type="int" />
           <Property Name="isgy" Type="int" />
           <Property Name="isnd" Type="int" />
+          <Property Name="thsxl" Type="varchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="huom2">
           <Key>
@@ -141,6 +153,7 @@
           <Property Name="name" Type="varchar" MaxLength="50" />
           <Property Name="sfyx" Type="int" />
           <Property Name="huomid" Type="int" />
+          <Property Name="dxs" Type="varchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="huot">
           <Key>
@@ -227,6 +240,8 @@
           <Property Name="tel" Type="varchar" MaxLength="50" />
           <Property Name="yhlx" Type="varchar" MaxLength="10" />
           <Property Name="xcxm" Type="varchar" MaxLength="20" />
+          <Property Name="zcddid" Type="int" />
+          <Property Name="zcddhtid" Type="int" />
         </EntityType>
         <EntityType Name="webdddl">
           <Key>
@@ -381,7 +396,6 @@
       <Schema Namespace="jhglModel1" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="jhglEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="CargoInInfoes" EntityType="jhglModel1.CargoInInfoes" />
-          <EntitySet Name="CargoLogInfoes" EntityType="jhglModel1.CargoLogInfoes" />
           <EntitySet Name="CargoOutOrderInfoes" EntityType="jhglModel1.CargoOutOrderInfoes" />
           <EntitySet Name="cheh" EntityType="jhglModel1.cheh" />
           <EntitySet Name="dw" EntityType="jhglModel1.dw" />
@@ -399,6 +413,7 @@
           <EntitySet Name="ShipmentHuotInfoes" EntityType="jhglModel1.ShipmentHuotInfoes" />
           <EntitySet Name="ShipmentInfoes" EntityType="jhglModel1.ShipmentInfoes" />
           <EntitySet Name="webdddl" EntityType="jhglModel1.webdddl" />
+          <EntitySet Name="CargoLogInfoes" EntityType="jhglModel1.CargoLogInfoes" />
         </EntityContainer>
         <EntityType Name="CargoInInfoes">
           <Key>
@@ -406,22 +421,6 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CargoInName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="CargoLogInfoes">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CargoId" Type="Int32" Nullable="false" />
-          <Property Name="ShipmentId" Type="Int32" Nullable="false" />
-          <Property Name="HuotId" Type="Int32" Nullable="false" />
-          <Property Name="ChangeWeight" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="CargoInId" Type="Int32" Nullable="false" />
-          <Property Name="StateId" Type="Int32" Nullable="false" />
-          <Property Name="Desc" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="InspectName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="InspectTime" Type="DateTime" Precision="3" />
-          <Property Name="IsIncome" Type="Boolean" />
         </EntityType>
         <EntityType Name="CargoOutOrderInfoes">
           <Key>
@@ -479,6 +478,15 @@
           <Property Name="zczl" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="err" Type="Int32" Nullable="false" />
           <Property Name="err_str" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="zcflag" Type="Int32" />
+          <Property Name="ph" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="zcren" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="zcshij" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="zhaoh" Type="Int32" />
+          <Property Name="zhaoh_yy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="zhaoh_sj" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="zhaoh_p" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="dais" Type="Int32" />
         </EntityType>
         <EntityType Name="dw">
           <Key>
@@ -507,6 +515,7 @@
           <Property Name="isxs" Type="Int32" />
           <Property Name="isgy" Type="Int32" />
           <Property Name="isnd" Type="Int32" />
+          <Property Name="thsxl" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="huom2">
           <Key>
@@ -516,6 +525,7 @@
           <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="sfyx" Type="Int32" />
           <Property Name="huomid" Type="Int32" />
+          <Property Name="dxs" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="huot">
           <Key>
@@ -581,6 +591,8 @@
           <Property Name="tel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="yhlx" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="xcxm" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="zcddid" Type="Int32" />
+          <Property Name="zcddhtid" Type="Int32" />
         </EntityType>
         <EntityType Name="CargoView">
           <Key>
@@ -693,6 +705,24 @@
           <Property Name="c_ry" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="n_time" Type="Int64" />
         </EntityType>
+        <EntityType Name="CargoLogInfoes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CargoId" Type="Int32" Nullable="false" />
+          <Property Name="ShipmentId" Type="Int32" Nullable="false" />
+          <Property Name="HuotId" Type="Int32" Nullable="false" />
+          <Property Name="ChangeWeight" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="CargoInId" Type="Int32" Nullable="false" />
+          <Property Name="StateId" Type="Int32" Nullable="false" />
+          <Property Name="Desc" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="InspectName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="InspectTime" Type="DateTime" Precision="3" />
+          <Property Name="IsIncome" Type="Boolean" />
+          <Property Name="Count" Type="Int32" />
+          <Property Name="WeightType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -703,23 +733,6 @@
             <EntityTypeMapping TypeName="jhglModel1.CargoInInfoes">
               <MappingFragment StoreEntitySet="CargoInInfoes">
                 <ScalarProperty Name="CargoInName" ColumnName="CargoInName" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="CargoLogInfoes">
-            <EntityTypeMapping TypeName="jhglModel1.CargoLogInfoes">
-              <MappingFragment StoreEntitySet="CargoLogInfoes">
-                <ScalarProperty Name="IsIncome" ColumnName="IsIncome" />
-                <ScalarProperty Name="InspectTime" ColumnName="InspectTime" />
-                <ScalarProperty Name="InspectName" ColumnName="InspectName" />
-                <ScalarProperty Name="Desc" ColumnName="Desc" />
-                <ScalarProperty Name="StateId" ColumnName="StateId" />
-                <ScalarProperty Name="CargoInId" ColumnName="CargoInId" />
-                <ScalarProperty Name="ChangeWeight" ColumnName="ChangeWeight" />
-                <ScalarProperty Name="HuotId" ColumnName="HuotId" />
-                <ScalarProperty Name="ShipmentId" ColumnName="ShipmentId" />
-                <ScalarProperty Name="CargoId" ColumnName="CargoId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -737,6 +750,15 @@
           <EntitySetMapping Name="cheh">
             <EntityTypeMapping TypeName="jhglModel1.cheh">
               <MappingFragment StoreEntitySet="cheh">
+                <ScalarProperty Name="dais" ColumnName="dais" />
+                <ScalarProperty Name="zhaoh_p" ColumnName="zhaoh_p" />
+                <ScalarProperty Name="zhaoh_sj" ColumnName="zhaoh_sj" />
+                <ScalarProperty Name="zhaoh_yy" ColumnName="zhaoh_yy" />
+                <ScalarProperty Name="zhaoh" ColumnName="zhaoh" />
+                <ScalarProperty Name="zcshij" ColumnName="zcshij" />
+                <ScalarProperty Name="zcren" ColumnName="zcren" />
+                <ScalarProperty Name="ph" ColumnName="ph" />
+                <ScalarProperty Name="zcflag" ColumnName="zcflag" />
                 <ScalarProperty Name="err_str" ColumnName="err_str" />
                 <ScalarProperty Name="err" ColumnName="err" />
                 <ScalarProperty Name="zczl" ColumnName="zczl" />
@@ -802,6 +824,7 @@
           <EntitySetMapping Name="huom">
             <EntityTypeMapping TypeName="jhglModel1.huom">
               <MappingFragment StoreEntitySet="huom">
+                <ScalarProperty Name="thsxl" ColumnName="thsxl" />
                 <ScalarProperty Name="isnd" ColumnName="isnd" />
                 <ScalarProperty Name="isgy" ColumnName="isgy" />
                 <ScalarProperty Name="isxs" ColumnName="isxs" />
@@ -816,6 +839,7 @@
           <EntitySetMapping Name="huom2">
             <EntityTypeMapping TypeName="jhglModel1.huom2">
               <MappingFragment StoreEntitySet="huom2">
+                <ScalarProperty Name="dxs" ColumnName="dxs" />
                 <ScalarProperty Name="huomid" ColumnName="huomid" />
                 <ScalarProperty Name="sfyx" ColumnName="sfyx" />
                 <ScalarProperty Name="name" ColumnName="name" />
@@ -860,6 +884,8 @@
           <EntitySetMapping Name="sys_ry">
             <EntityTypeMapping TypeName="jhglModel1.sys_ry">
               <MappingFragment StoreEntitySet="sys_ry">
+                <ScalarProperty Name="zcddhtid" ColumnName="zcddhtid" />
+                <ScalarProperty Name="zcddid" ColumnName="zcddid" />
                 <ScalarProperty Name="xcxm" ColumnName="xcxm" />
                 <ScalarProperty Name="yhlx" ColumnName="yhlx" />
                 <ScalarProperty Name="tel" ColumnName="tel" />
@@ -1002,6 +1028,25 @@
                 <ScalarProperty Name="n_time" ColumnName="n_time" />
                 <ScalarProperty Name="c_ry" ColumnName="c_ry" />
                 <ScalarProperty Name="c_uuid" ColumnName="c_uuid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CargoLogInfoes">
+            <EntityTypeMapping TypeName="jhglModel1.CargoLogInfoes">
+              <MappingFragment StoreEntitySet="CargoLogInfoes">
+                <ScalarProperty Name="WeightType" ColumnName="WeightType" />
+                <ScalarProperty Name="Count" ColumnName="Count" />
+                <ScalarProperty Name="IsIncome" ColumnName="IsIncome" />
+                <ScalarProperty Name="InspectTime" ColumnName="InspectTime" />
+                <ScalarProperty Name="InspectName" ColumnName="InspectName" />
+                <ScalarProperty Name="Desc" ColumnName="Desc" />
+                <ScalarProperty Name="StateId" ColumnName="StateId" />
+                <ScalarProperty Name="CargoInId" ColumnName="CargoInId" />
+                <ScalarProperty Name="ChangeWeight" ColumnName="ChangeWeight" />
+                <ScalarProperty Name="HuotId" ColumnName="HuotId" />
+                <ScalarProperty Name="ShipmentId" ColumnName="ShipmentId" />
+                <ScalarProperty Name="CargoId" ColumnName="CargoId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -1,4 +1,5 @@
-﻿using Packing.Models;
+﻿using System.Configuration;
+using Packing.Models;
 using System.Linq;
 using System.Web.Mvc;
 using DbEfModel;
@@ -10,7 +11,12 @@ namespace Packing.Controllers
     {
 
         private readonly jhglEntities _db = new jhglEntities();
+        private readonly string _userPk;
 
+        public LoginController()
+        {
+            _userPk = ConfigurationManager.AppSettings["UserPk"];
+        }
 
         public ActionResult Index()
         {
@@ -24,12 +30,21 @@ namespace Packing.Controllers
             var userInfoNew = _db.sys_ry.Find(webId.c_ry);
             _db.webdddl.Remove(webId);
             _db.SaveChanges();
-            //return Redirect("http://10.28.212.1:8680/");
             if (JudgeLoger(userInfoNew))
             {
                 return RedirectToAction("Index", "cargo");
             }
-            //return Json(new { success = "fail", message = "登陆失败" });
+            return Redirect("http://10.28.212.1:8680/");
+        }
+
+        [HttpGet]
+        public ActionResult PkLogin()
+        {
+            var userInfoNew = _db.sys_ry.Find(_userPk);
+            if (JudgeLoger(userInfoNew))
+            {
+                return RedirectToAction("Index", "cargo");
+            }
             return Redirect("http://10.28.212.1:8680/");
         }
 
@@ -46,6 +61,12 @@ namespace Packing.Controllers
         //    }
         //    return Json(new { success = "fail", message = "登陆失败" });
         //}
+
+        public ActionResult Check()
+        {
+            return Json("OK?OK!", JsonRequestBehavior.AllowGet);
+        }
+
 
         public ActionResult LogOff()
         {

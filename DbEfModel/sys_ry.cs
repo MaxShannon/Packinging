@@ -43,5 +43,7 @@ namespace DbEfModel
         public string tel { get; set; }
         public string yhlx { get; set; }
         public string xcxm { get; set; }
+        public Nullable<int> zcddid { get; set; }
+        public Nullable<int> zcddhtid { get; set; }
     }
 }

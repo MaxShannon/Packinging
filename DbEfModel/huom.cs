@@ -22,5 +22,6 @@ namespace DbEfModel
         public Nullable<int> isxs { get; set; }
         public Nullable<int> isgy { get; set; }
         public Nullable<int> isnd { get; set; }
+        public string thsxl { get; set; }
     }
 }

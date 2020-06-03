@@ -136,7 +136,7 @@ namespace Services
             return li;
         }
 
-        public bool AddCargoComeLog(int huom2Id, int huotId, string shipmentNo, decimal changeWeight, string inspectName)
+        public bool AddCargoComeLog(int huom2Id, int huotId, string shipmentNo, decimal changeWeight, string inspectName, int count, decimal weightType)
         {
             CheckCargo(huom2Id);
             var cargo = _db.CargoInfoes.First(c => c.Huom2Id == huom2Id);
@@ -144,6 +144,7 @@ namespace Services
             {
                 var shipment = _db.ShipmentInfoes.First(a => a.ShipmentNo == shipmentNo);
 
+                var str = "每袋" + weightType.ToString();
                 var cargoLog = new CargoLogInfoes()
                 {
                     ChangeWeight = changeWeight,
@@ -155,6 +156,8 @@ namespace Services
                     CargoId = cargo.Id,
                     ShipmentId = shipment.Id,
                     HuotId = huotId,
+                    Count = count,
+                    WeightType = str
                 };
                 _db.CargoLogInfoes.Add(cargoLog);
                 return _db.SaveChanges() > 0;
@@ -769,17 +772,19 @@ namespace Services
             }
         }
 
-        public IEnumerable<CargoViewModel> GetHuotShipments(int huotId)
+        public IEnumerable<CargoViewModel> GetHuotShipments(int huotId, int huom2Id)
         {
             var temp = (
                 from shipmentHuotInfoes in _db.ShipmentHuotInfoes
                 join shipmentInfoes in _db.ShipmentInfoes on shipmentHuotInfoes.ShipmentId equals shipmentInfoes.Id
+                join cargoInfoes in _db.CargoInfoes on shipmentInfoes.CargoId equals cargoInfoes.Id
                 select new CargoViewModel
                 {
                     HuotId = shipmentHuotInfoes.HuotId,
                     ShipmentId = shipmentInfoes.Id,
-                    ShipmentNo = shipmentInfoes.ShipmentNo
-                }).Where(a => a.HuotId == huotId);
+                    ShipmentNo = shipmentInfoes.ShipmentNo,
+                    Huom2Id = cargoInfoes.Huom2Id
+                }).Where(a => a.HuotId == huotId && a.Huom2Id == huom2Id);
             var list = temp.ToList();
             return list;
         }
