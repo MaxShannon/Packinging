@@ -129,9 +129,10 @@ namespace DbEfModel
 
         public int DwId { get; set; }
         public string UserId { get; set; }
+        [Display(Name = "小类名称")]
         public int Huom2Id { get; set; }
 
-        public int cargoOutOrderId { get; set; }
+        public int CargoOutOrderId { get; set; }
 
         public bool IsChecked { get; set; }
 
@@ -146,5 +147,12 @@ namespace DbEfModel
 
         [Display(Name = "袋重")]
         public string PackName { get; set; }
+
+        public int CargoHuotId { get; set; }
+
+        [Display(Name = "大类名称")]
+        public int HuomId { get; set; }
+        [Display(Name = "大类名称")]
+        public string HuomName { get; set; }
     }
 }

@@ -5,21 +5,16 @@ using System.Linq;
 
 namespace Services
 {
-    public class CargoService
+    public class CargoService : BaseService
     {
-        private readonly int _lxId; // 8
-        private readonly int _lxId2; // 9
-        private readonly int _lxCheckId; // 7
-        // private readonly int _dwId;
+
 
         private readonly jhglEntities _db = new jhglEntities();
         private readonly ZDCZ_SLEntities _dbd = new ZDCZ_SLEntities();
 
-        public CargoService(int lxId, int lxId2, int lxCheckId)
+        public CargoService()
         {
-            _lxId = lxId;
-            _lxId2 = lxId2;
-            _lxCheckId = lxCheckId;
+
         }
 
         public IEnumerable<CargoViewModel> GetCargo(int? Huom2Id, int? huotId, int? shipmentId, string userId)
@@ -139,55 +134,40 @@ namespace Services
         public bool AddCargoComeLog(int huom2Id, int huotId, string shipmentNo, decimal changeWeight, string inspectName, int count, decimal weightType)
         {
             CheckCargo(huom2Id);
-            var cargo = _db.CargoInfoes.First(c => c.Huom2Id == huom2Id);
-            if (CheckShipment(shipmentNo, cargo.Id))
-            {
-                var shipment = _db.ShipmentInfoes.First(a => a.ShipmentNo == shipmentNo);
+            var cargo = _db.CargoInfoes.FirstOrDefault(c => c.Huom2Id == huom2Id);
 
-                var str = "每袋" + weightType.ToString();
-                var cargoLog = new CargoLogInfoes()
-                {
-                    ChangeWeight = changeWeight,
-                    IsIncome = true,
-                    InspectTime = DateTime.Now,
-                    InspectName = inspectName,
-                    StateId = 1,
-                    Desc = StateEnum.正在审核.ToString(),//"等待审核",
-                    CargoId = cargo.Id,
-                    ShipmentId = shipment.Id,
-                    HuotId = huotId,
-                    Count = count,
-                    WeightType = str
-                };
-                _db.CargoLogInfoes.Add(cargoLog);
-                return _db.SaveChanges() > 0;
-            }
-            return false;
-        }
+            CheckShipment(shipmentNo, cargo.Id);
+            var shipment = _db.ShipmentInfoes.FirstOrDefault(a => a.ShipmentNo == shipmentNo && a.CargoId == cargo.Id);
 
-        private bool CheckShipment(string shipmentNo, int cargoId)
-        {
-            var cargoName = _db.CargoInfoes.Find(cargoId);
-            var shipment = _db.ShipmentInfoes.FirstOrDefault(a => a.ShipmentNo == shipmentNo);
-            if (shipment == null)
+            CheckShipmentHuot(shipment.Id, huotId);
+            var shipmentHuot = _db.ShipmentHuotInfoes.FirstOrDefault(a => a.ShipmentId == shipment.Id && a.HuotId == huotId);
+
+            CheckCargoHuot(cargo.Id, huotId);
+            var cargoHuot = _db.CargoHuotInfoes.FirstOrDefault(a => a.CargoId == cargo.Id && a.HuotId == huotId);
+
+            var cargoLog = new CargoLogInfoes()
             {
-                // create
-                var newShipment = new ShipmentInfoes();
-                newShipment.ShipmentNo = shipmentNo;
-                newShipment.CargoId = cargoId;
-                newShipment.Weight = 0;
-                newShipment.CargoName = cargoName.CargoName;
-                _db.ShipmentInfoes.Add(newShipment);
-                return _db.SaveChanges() > 0;
-            }
-            else if (shipment.CargoId == cargoId)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+                ChangeWeight = changeWeight,
+                IsIncome = true,
+                InspectTime = DateTime.Now,
+                InspectName = inspectName,
+                StateId = (int)StateEnum.正在审核,
+                Desc = StateEnum.正在审核.ToString(),//"等待审核",
+                CargoId = cargo.Id,
+                ShipmentId = shipment.Id,
+                ShipmentNo = shipment.ShipmentNo,
+                HuotId = huotId,
+                Count = count,
+                WeightType = weightType == 0 ? "" : "每袋" + weightType,
+            };
+            _db.CargoLogInfoes.Add(cargoLog);
+
+            cargo.Weight += changeWeight;
+            shipment.Weight += changeWeight;
+            shipmentHuot.Weight += changeWeight;
+            cargoHuot.Weight += changeWeight;
+
+            return _db.SaveChanges() > 0;
         }
 
         public bool AddCargoShipLog(int huom2Id, int huotId, int shipmentId, decimal changeWeight, int cargoInId, string inspectName)
@@ -230,95 +210,14 @@ namespace Services
                 CargoId = cargo.Id,
                 ChangeWeight = changeWeight,
                 ShipmentId = shipment.Id,
+                ShipmentNo = shipment.ShipmentNo,
                 CargoInId = cargoInId,
                 HuotId = huotId,
                 InspectName = inspectName,
-                Desc = ""
+                Desc = "火车出库"
             };
             _db.CargoLogInfoes.Add(cargoLog);
 
-            return _db.SaveChanges() > 0;
-
-        }
-
-        public bool PassCargoLog(int id)
-        {
-            var cargoLog = _db.CargoLogInfoes.Find(id);
-            var cargo = _db.CargoInfoes.Find(cargoLog.CargoId);
-            cargo.Weight += cargoLog.ChangeWeight;
-            cargoLog.Desc = "通过!!!";
-            cargoLog.StateId = 2;
-
-            // add shipment
-            var shipment = _db.ShipmentInfoes.FirstOrDefault(a => a.Id == cargoLog.ShipmentId);
-            if (shipment == null)
-            {
-                //var shipmentNew = new ShipmentInfoes()
-                //{
-                //    CargoId = cargo.Id,
-                //    Id = cargoLog.ShipmentId,
-                //    ShipmentWeight = cargoLog.ChangeWeight,
-                //    InspectTime = DateTime.Now,
-                //    InspectId = LoginUser.pk
-                //};
-                //_db.ShipmentInfo.Add(shipmentNew);
-                return false;
-            }
-            else
-            {
-                shipment.Weight += cargoLog.ChangeWeight;
-                _db.Entry(shipment).Property(c => c.Weight).IsModified = true;
-            }
-
-            var cargoAreaCargo = _db.ShipmentHuotInfoes.FirstOrDefault(a => a.HuotId == cargoLog.HuotId && a.ShipmentId == cargoLog.ShipmentId);
-            var huot = _db.huot.Find(cargoLog.HuotId);
-
-            if (cargoAreaCargo == null)
-            {
-                // add new 
-                var cargoAreaCargoNew = new ShipmentHuotInfoes();
-                cargoAreaCargoNew.HuotId = cargoLog.HuotId;
-                cargoAreaCargoNew.ShipmentId = cargoLog.ShipmentId;
-                cargoAreaCargoNew.Weight = cargoLog.ChangeWeight;
-                cargoAreaCargoNew.HuotName = huot.name;
-                cargoAreaCargoNew.ShipmentNo = shipment.ShipmentNo;
-                _db.ShipmentHuotInfoes.Add(cargoAreaCargoNew);
-            }
-            else
-            {
-                // update weight
-                cargoAreaCargo.Weight += cargoLog.ChangeWeight;
-            }
-
-            var cargoHuotInfoes = _db.CargoHuotInfoes.FirstOrDefault(a => a.CargoId == cargo.Id && a.HuotId == cargoLog.HuotId);
-            if (cargoHuotInfoes == null)
-            {
-                // add
-                var newCargoHuot = new CargoHuotInfoes();
-                newCargoHuot.CargoId = cargo.Id;
-                newCargoHuot.HuotId = cargoLog.HuotId;
-                newCargoHuot.Weight = cargoLog.ChangeWeight;
-                newCargoHuot.CargoName = cargo.CargoName;
-                newCargoHuot.HuotName = huot.name;
-                _db.CargoHuotInfoes.Add(newCargoHuot);
-            }
-            else
-            {
-                // update
-                if (cargoLog.IsIncome == true)
-                {
-                    cargoHuotInfoes.Weight += cargoLog.ChangeWeight;
-                }
-                else
-                {
-                    cargoHuotInfoes.Weight -= cargoLog.ChangeWeight;
-                }
-                _db.Entry(cargoHuotInfoes).Property(c => c.Weight).IsModified = true;
-            }
-
-
-
-            //_db.Entry(cargoLog).Property(c => c.StateId).IsModified = true;
             return _db.SaveChanges() > 0;
 
         }
@@ -335,36 +234,7 @@ namespace Services
             return shipmentList;
         }
 
-        public bool RejectCargoLog(int id)
-        {
-            var cargoLog = _db.CargoLogInfoes.Find(id);
-            cargoLog.Desc = "驳回!!!";
-            cargoLog.StateId = 3;
-            _db.Entry(cargoLog).Property(c => c.Desc).IsModified = true;
-            _db.Entry(cargoLog).Property(c => c.StateId).IsModified = true;
-            _db.SaveChanges();
-            return true;
-        }
 
-        public void CheckCargo(int id)
-        {
-            if (id == 0)
-            {
-                return;
-            }
-            var huom2 = _db.huom2.Find(id);
-            var cargo = _db.CargoInfoes.FirstOrDefault(a => a.Huom2Id == id);
-            if (cargo == null)
-            {
-                // create
-                var newCargo = new CargoInfoes();
-                newCargo.Huom2Id = id;
-                newCargo.Weight = 0;
-                newCargo.CargoName = huom2.name;
-                _db.CargoInfoes.Add(newCargo);
-                _db.SaveChanges();
-            }
-        }
 
         public IEnumerable<CargoViewModel> GetCargoLog(int huom2Id, int stateId, DateTime timeStart, DateTime timeEnd, string userId, int? isIncome, int? huotId)
         {
@@ -372,7 +242,7 @@ namespace Services
             IQueryable<CargoViewModel> list;
             if (IsInOut(user))
             {
-                list = (
+                var temp = (
                     from cargoLogInfoes in _db.CargoLogInfoes
                     join sys_ry in _db.sys_ry on cargoLogInfoes.HuotId equals sys_ry.htid
                     join cargoInfoes in _db.CargoInfoes on cargoLogInfoes.CargoId equals cargoInfoes.Id
@@ -394,7 +264,7 @@ namespace Services
                         UserId = sys_ry.pk,
                         ChangeWeight = cargoLogInfoes.ChangeWeight,
                         StateId = cargoLogInfoes.StateId,
-                        ShipmentNo = shipmentInfoes.ShipmentNo,
+                        ShipmentNo = cargoLogInfoes.ShipmentNo,
                         CargoInName = cargoInInfoes.CargoInName,
                         HuotName = huot.name,
                         Time = (DateTime)cargoLogInfoes.InspectTime,
@@ -402,8 +272,10 @@ namespace Services
                         IsIncome = (bool)cargoLogInfoes.IsIncome,
                         HuotId = huot.id,
                         InspectName = cargoLogInfoes.InspectName,
+                        HuomId = huom.id
                     }
-               ).Where(a => a.UserId == userId);
+                );
+                list = temp.Where(a => a.UserId == userId);
             }
             else
             {
@@ -439,7 +311,7 @@ namespace Services
                         UserId = sys_ry.pk,
                         ChangeWeight = cargoLogInfoes.ChangeWeight,
                         StateId = cargoLogInfoes.StateId,
-                        ShipmentNo = shipmentInfoes.ShipmentNo,
+                        ShipmentNo = cargoLogInfoes.ShipmentNo,
                         CargoInName = cargoInInfoes.CargoInName,
                         HuotName = huot.name,
                         Time = (DateTime)cargoLogInfoes.InspectTime,
@@ -447,17 +319,10 @@ namespace Services
                         IsIncome = (bool)cargoLogInfoes.IsIncome,
                         HuotId = huot.id,
                         InspectName = cargoLogInfoes.InspectName,
+                        HuomId = huom.id,
                     }).Where(a => a.UserId == userId);
             }
 
-
-
-
-
-            if (stateId != 0)
-            {
-                list = list.Where(a => a.StateId == stateId);
-            }
 
             if (isIncome == 2)
             {
@@ -517,6 +382,7 @@ namespace Services
                        HuotId = huot.id,
                        CargoId = cargoInfoes.Id,
                        ShipmentNo = shipmentInfoes.ShipmentNo,
+                       IsOk = true
                    }).Where(a => a.UserId == userId);
             }
 
@@ -549,6 +415,7 @@ namespace Services
                         HuotId = huot.id,
                         CargoId = cargoInfoes.Id,
                         ShipmentNo = shipmentInfoes.ShipmentNo,
+                        IsOk = true
                     }).Where(a => a.UserId == userId);
             }
             //var list = (
@@ -597,9 +464,10 @@ namespace Services
             return li;
         }
 
-        public bool ExchangeShipment(int cargoId, string shipmentNo, int huotId, int newHuotId, decimal weight, string userId)
+        public bool ExchangeShipment(string shipmentNo, int huotId, int newHuotId, decimal weight, string userId)
         {
             var shipment = _db.ShipmentInfoes.First(a => a.ShipmentNo == shipmentNo);
+            var cargoId = shipment.CargoId;
             var user = _db.sys_ry.Find(userId);
             var cargoAreaCargo = _db.ShipmentHuotInfoes.First(a => a.HuotId == huotId && a.ShipmentId == shipment.Id);
             cargoAreaCargo.Weight -= weight;
@@ -607,26 +475,20 @@ namespace Services
             {
                 return false;
             }
-            var newCargoAreaCargo = _db.ShipmentHuotInfoes.FirstOrDefault(a => a.HuotId == newHuotId && a.ShipmentId == shipment.Id);
-            var huot = _db.huot.Find(huotId);
-            if (newCargoAreaCargo == null)
+            var cargoHuot = _db.CargoHuotInfoes.FirstOrDefault(a => a.CargoId == shipment.CargoId && a.HuotId == huotId);
+            cargoHuot.Weight -= weight;
+            if (cargoHuot.Weight < 0)
             {
-                // add
-                var newCac = new ShipmentHuotInfoes();
-                newCac.HuotId = newHuotId;
-                newCac.Weight = weight;
-                //newCac.InspectId = LoginUser.pk;
-                //newCac.InspectTime = DateTime.Now;
-                newCac.ShipmentId = shipment.Id;
-                newCac.HuotName = huot.name;
-                _db.ShipmentHuotInfoes.Add(newCac);
+                return false;
             }
-            else
-            {
-                newCargoAreaCargo.Weight += weight;
-                //newCargoAreaCargo.InspectId = LoginUser.pk;
-                //newCargoAreaCargo.InspectTime = DateTime.Now;
-            }
+            CheckCargoHuot(cargoId, newHuotId);
+            var newCargoHuot = _db.CargoHuotInfoes.First(a => a.CargoId == cargoId && a.HuotId == newHuotId);
+            newCargoHuot.Weight += weight;
+
+            CheckShipmentHuot(shipment.Id, newHuotId);
+            var newShipmentHuo = _db.ShipmentHuotInfoes.FirstOrDefault(a => a.HuotId == newHuotId && a.ShipmentId == shipment.Id);
+            var huot = _db.huot.Find(newHuotId);
+            newShipmentHuo.Weight += weight;
 
             //var cargoLogList = new List<CargoLogInfo>();
             var cargoLog = new CargoLogInfoes();
@@ -635,12 +497,12 @@ namespace Services
             cargoLog.CargoId = cargoId;
             cargoLog.HuotId = huotId;
             cargoLog.ShipmentId = shipment.Id;
+            cargoLog.ShipmentNo = shipment.ShipmentNo;
             cargoLog.StateId = 3;
             cargoLog.InspectName = user.name;
             cargoLog.InspectTime = DateTime.Now;
             cargoLog.Desc = "转库";
             _db.CargoLogInfoes.Add(cargoLog);
-            _db.SaveChanges();
 
             var cargoLog2 = new CargoLogInfoes();
             cargoLog2.IsIncome = true;
@@ -648,13 +510,15 @@ namespace Services
             cargoLog2.CargoId = cargoId;
             cargoLog2.HuotId = newHuotId;
             cargoLog2.ShipmentId = shipment.Id;
+            cargoLog.ShipmentNo = shipment.ShipmentNo;
             cargoLog2.StateId = 3;
             cargoLog2.InspectName = user.name;
             cargoLog2.InspectTime = DateTime.Now;
             cargoLog2.Desc = "转库";
             _db.CargoLogInfoes.Add(cargoLog2);
 
-            return true;
+
+            return _db.SaveChanges() >= 2;
         }
 
         public bool ConfirmCargoOutOrder(int cargoOutOrderId, string userId)
@@ -688,6 +552,7 @@ namespace Services
             _db.Entry(cargo).Property(c => c.Weight).IsModified = true;
             _db.Entry(shipment).Property(c => c.Weight).IsModified = true;
             _db.Entry(shipmentHuot).Property(c => c.Weight).IsModified = true;
+            _db.Entry(cargoHuot).Property(c => c.Weight).IsModified = true;
 
             var cargoLog = new CargoLogInfoes()
             {
@@ -697,16 +562,16 @@ namespace Services
                 CargoId = cargo.Id,
                 ChangeWeight = (decimal)shipmentView.PH_ZL,
                 ShipmentId = shipment.Id,
-                CargoInId = 1,
+                ShipmentNo = shipment.ShipmentNo,
+                CargoInId = 2,
                 HuotId = shipmentHuot.HuotId,
                 InspectName = shipmentView.qianfa,
-                Desc = ""
+                Desc = "汽车出库",
             };
             _db.CargoLogInfoes.Add(cargoLog);
 
-            _db.SaveChanges();
-            _dbd.SaveChanges();
-            return true;
+
+            return _db.SaveChanges() == 5 && _dbd.SaveChanges() == 1;
         }
 
         public IEnumerable<CargoViewModel> GetUserHuot(string userId)
@@ -760,18 +625,6 @@ namespace Services
             return list;
         }
 
-        private bool IsCanSeeAll(sys_ry user)
-        {
-            if (user.qx == 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
         public IEnumerable<CargoViewModel> GetHuotShipments(int huotId, int huom2Id)
         {
             var temp = (
@@ -789,19 +642,7 @@ namespace Services
             return list;
         }
 
-        private bool IsInOut(sys_ry user)
-        {
-            if (user.lx == _lxId || user.lx == _lxId2)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public IEnumerable<CargoViewModel> GetCargoOutShipment(int huotId, string loginUserId)
+        public IEnumerable<CargoViewModel> GetCargoOutShipment(string loginUserId)
         {
             var temp = (
                 from shipmentView in _db.ShipmentView
@@ -812,10 +653,10 @@ namespace Services
                 join huom2 in _db.huom2 on cargoInfoes.Huom2Id equals huom2.id
                 join huom in _db.huom on huom2.huomid equals huom.id
                 join sys_ry in _db.sys_ry on huot.id equals sys_ry.htid
-                where sys_ry.pk == loginUserId && (sys_ry.lx == _lxId || sys_ry.lx == _lxId2) //&& sys_ry.htid == huotId
+                where sys_ry.pk == loginUserId && (sys_ry.lx == _lxId || sys_ry.lx == _lxId2) && sys_ry.htid == shipmentView.HuotId && shipmentView.tihuolx == "发货位       "
                 select new CargoViewModel
                 {
-                    cargoOutOrderId = shipmentView.ID,
+                    CargoOutOrderId = shipmentView.ID,
                     HuotId = (int)shipmentView.HuotId,
                     ShipmentNo = shipmentView.PH_NO,
                     IsChecked = shipmentView.IsChecked == true,
@@ -824,9 +665,194 @@ namespace Services
                     CargoName = huom2.name,
                     TopCargoName = huom.name,
                     WeightDu = (double)shipmentView.PH_ZL,
-                    MissDuTime = shipmentView.sj
+                    MissDuTime = shipmentView.sj,
+                    IsOk = true
                 });
             var list = temp.ToList();
+            return list;
+        }
+        public IEnumerable<CargoViewModel> GetSelfSellLog(string loginUserId)
+        {
+            var temp = (
+                from shipmentView in _db.ShipmentView
+                join cheh in _db.cheh on shipmentView.DHLS equals cheh.DHLS
+                join huot in _db.huot on shipmentView.HuotId equals huot.id
+                join shipmentInfoes in _db.ShipmentInfoes on shipmentView.PH_NO equals shipmentInfoes.ShipmentNo
+                join cargoInfoes in _db.CargoInfoes on shipmentInfoes.CargoId equals cargoInfoes.Id
+                join huom2 in _db.huom2 on cargoInfoes.Huom2Id equals huom2.id
+                join huom in _db.huom on huom2.huomid equals huom.id
+                join sys_ry in _db.sys_ry on huot.id equals sys_ry.htid
+                where sys_ry.pk == loginUserId && (sys_ry.lx == _lxId || sys_ry.lx == _lxId2) && sys_ry.htid == shipmentView.HuotId && shipmentView.tihuolx == "自提        "
+                select new CargoViewModel
+                {
+                    CargoOutOrderId = shipmentView.ID,
+                    HuotId = (int)shipmentView.HuotId,
+                    ShipmentNo = shipmentView.PH_NO,
+                    IsChecked = shipmentView.IsChecked == true,
+                    WeightFlag = cheh.weight_flag,
+                    HuotName = huot.name,
+                    CargoName = huom2.name,
+                    TopCargoName = huom.name,
+                    WeightDu = (double)shipmentView.PH_ZL,
+                    MissDuTime = shipmentView.sj,
+                    IsOk = true
+                });
+            var list = temp.ToList();
+            return list;
+        }
+
+        private bool IsCanSeeAll(sys_ry user)
+        {
+            if (user.qx == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public void CheckShipment(string shipmentNo, int cargoId)
+        {
+            var cargo = _db.CargoInfoes.Find(cargoId);
+            var shipment = _db.ShipmentInfoes.FirstOrDefault(a => a.ShipmentNo == shipmentNo && a.CargoId == cargo.Id);
+            if (shipment == null)
+            {
+                // create 是否有这个批号
+                var newShipment = new ShipmentInfoes();
+                newShipment.ShipmentNo = shipmentNo;
+                newShipment.CargoId = cargoId;
+                newShipment.Weight = 0;
+                newShipment.CargoName = cargo.CargoName;
+                _db.ShipmentInfoes.Add(newShipment);
+                _db.SaveChanges();
+            }
+        }
+
+        public void CheckShipmentHuot(int shipmentId, int huotId)
+        {
+            var model = _db.ShipmentHuotInfoes.FirstOrDefault(a => a.ShipmentId == shipmentId && a.HuotId == huotId);
+            if (model == null)
+            {
+                var huot = _db.huot.Find(huotId);
+                var shipment = _db.ShipmentInfoes.Find(shipmentId);
+                var newModel = new ShipmentHuotInfoes();
+                newModel.HuotId = huotId;
+                newModel.ShipmentId = shipmentId;
+                newModel.HuotName = huot.name;
+                newModel.ShipmentNo = shipment.ShipmentNo;
+                newModel.Weight = 0;
+                _db.ShipmentHuotInfoes.Add(newModel);
+                _db.SaveChanges();
+            }
+        }
+
+        public void CheckCargoHuot(int cargoId, int huotId)
+        {
+            var model = _db.CargoHuotInfoes.FirstOrDefault(a => a.CargoId == cargoId && a.HuotId == huotId);
+            if (model == null)
+            {
+                var cargo = _db.CargoInfoes.Find(cargoId);
+                var huot = _db.huot.Find(huotId);
+
+                var newModel = new CargoHuotInfoes();
+                newModel.HuotId = huotId;
+                newModel.CargoId = cargoId;
+                newModel.CargoName = cargo.CargoName;
+                newModel.HuotName = huot.name;
+                newModel.Weight = 0;
+                _db.CargoHuotInfoes.Add(newModel);
+                _db.SaveChanges();
+            }
+        }
+        /// <summary>
+        /// cargo中是否有huom2
+        /// </summary>
+        /// <param name="id">huom2id</param>
+        public void CheckCargo(int id)
+        {
+            if (id == 0)
+            {
+                return;
+            }
+            var huom2 = _db.huom2.Find(id);
+            var cargo = _db.CargoInfoes.FirstOrDefault(a => a.Huom2Id == id);
+            if (cargo == null)
+            {
+                // create
+                var newCargo = new CargoInfoes();
+                newCargo.Huom2Id = id;
+                newCargo.Weight = 0;
+                newCargo.CargoName = huom2.name;
+                _db.CargoInfoes.Add(newCargo);
+                _db.SaveChanges();
+            }
+        }
+
+        public bool SelfSellOut(int id, string userId)
+        {
+            var user = _db.sys_ry.Find(userId);
+            var pihao = _dbd.pihao.Find(id);
+            var shipment = _db.ShipmentInfoes.FirstOrDefault(a => a.ShipmentNo == pihao.PH_NO);
+
+            var cargoLog = new CargoLogInfoes()
+            {
+                ChangeWeight = (decimal)pihao.PH_ZL,
+                IsIncome = true,
+                InspectTime = DateTime.Now,
+                InspectName = user.name,
+                StateId = 3,
+                Desc = "入库自提",
+                CargoId = shipment.CargoId,
+                ShipmentId = shipment.Id,
+                ShipmentNo = shipment.ShipmentNo,
+                HuotId = (int)pihao.HuotId,
+                Count = 0,
+                WeightType = ""
+            };
+            var cargoLog2 = new CargoLogInfoes()
+            {
+                ChangeWeight = (decimal)pihao.PH_ZL,
+                IsIncome = false,
+                InspectTime = DateTime.Now,
+                InspectName = user.name,
+                StateId = 3,
+                Desc = "出库自提",
+                CargoId = shipment.CargoId,
+                ShipmentNo = shipment.ShipmentNo,
+                ShipmentId = shipment.Id,
+                HuotId = (int)pihao.HuotId,
+                Count = 0,
+                WeightType = ""
+            };
+            _db.CargoLogInfoes.Add(cargoLog);
+            _db.CargoLogInfoes.Add(cargoLog2);
+            pihao.IsChecked = true;
+            pihao.InspectId = userId;
+            pihao.InspectTime = DateTime.Now;
+            return _db.SaveChanges() == 2 && _dbd.SaveChanges() == 1;
+        }
+
+        public IEnumerable<CargoViewModel> GetCargoHuot(int huotId, string loginUserPk)
+        {
+            var list = (
+                from a in _db.CargoHuotInfoes
+                join b in _db.CargoInfoes on a.CargoId equals b.Id
+                join c in _db.huom2 on b.Huom2Id equals c.id
+                join d in _db.huom on c.huomid equals d.id
+                where a.HuotId == huotId
+                select new CargoViewModel()
+                {
+                    CargoHuotId = a.Id,
+                    HuotId = a.HuotId,
+                    CargoId = a.CargoId,
+                    CargoName = a.CargoName,
+                    HuotName = a.HuotName,
+                    TopCargoName = d.name,
+                    Weight = a.Weight
+                }
+            ).ToList();
             return list;
         }
     }

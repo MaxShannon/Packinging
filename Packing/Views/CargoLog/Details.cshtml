@@ -40,29 +40,18 @@
         });
 
         $("#assemble").click(function () {
-
-            if (0 == 0) {
-
-                $("#myModalLabel").text("汇总");
-                $('#myModal').modal();
-                var listAssemble = new TableInitAssemble();
-                listAssemble.Init();
-            } else {
-                $.ajax({
-                    url: '@Url.Action("AssembleWeight")',
-                    type: "Post",
-                    data: $('#form').serialize(),
-                    success: function (data) {
-                        alert("总数为" + data.data);
-                        @*window.location.href = '@Url.Action("Details","Cargo",new{id = Model.Id})';*@
-                    },
-                    error: function (data) {
-                        alert(data);
-                    }
-                });
-            }
+            $("#myModalLabel").text("汇总");
+            $('#myModal').modal();
+            var listAssemble = new TableInitAssemble();
+            listAssemble.Init();
         });
 
+        $("#inOutAssemble").click(function () {
+            $("#myModalLabel2").text("出入库汇总");
+            $('#myModal2').modal();
+            var listInOutAssemble = new TableInitInOutAssemble();
+            listInOutAssemble.Init();
+        });
 
     });
 
@@ -72,7 +61,7 @@
         oTableInit.Init = function (data) {
             $('#list').bootstrapTable("destroy");
             $('#list').bootstrapTable({
-                url: '/Cargo/Details1', //请求后台的URL（*）
+                url: '/CargoLog/Details1', //请求后台的URL（*）
                 method: 'Post', //请求方式（*）
                 toolbar: '#toolbar', //工具按钮用哪个容器
                 striped: true, //是否显示行间隔色
@@ -98,10 +87,11 @@
                 cardView: false, //是否显示详细视图
                 detailView: false, //是否显示父子表
                 columns: [
+                    //{
+                    //    checkbox: true,
+                    //    visible: true
+                    //},
                     {
-                        checkbox: true,
-                        visible: true
-                    }, {
                         field: 'CargoLogId',
                         title: '记录号'
                     }, {
@@ -144,43 +134,12 @@
                         } //自定义方法，添加操作按钮
                     },
 
-                    //{
-                    //    field: 'RealName',
-                    //    title: '保管员'
-                    //}, {
-                    //    field: 'TakenName',
-                    //    title: '领用人'
-                    //},
                     {
                         field: 'Desc',
                         title: '备注'
                     }
-                     //   {
-                    //    field: 'operate',
-                    //    title: '操作',
-                    //    formatter: function (value, row, index) { //赋予的参数
-                    //        var str = '<a class="btn btn-info" href="Storage/StorageIncomingCreate?id=' + row.Id + '">入库</a>' +
-                    //            '<a class="btn btn-info" href="Storage/StorageShippingCreate?id=' + row.Id + '">出库</a>' +
-                    //            '<a class="btn btn-info" href="Cargo/Details?id=' + row.Id + '">明细</a>' +
-                    //            '<a class="btn btn-primary" href="Account/Edit?id=' + row.Id + '">修改</a>' +
-                    //            '<a class="btn btn-warning" href="Account/Delete?id=' + row.Id + '">删除</a>';
-                    //        return str;
-                    //    } //自定义方法，添加操作按钮
-                    //}
+
                 ],
-
-                rowStyle: function (row, index) {
-                    var classesArr = ['success', 'info'];
-                    var rowStyle;
-                    if (index % 2 === 0) { //偶数行
-                        rowStyle = classesArr[0];
-                    } else { //奇数行
-                        rowStyle = classesArr[1];
-                    }
-                    return { classes: rowStyle };
-                }, //隔行变色
-
-
                 queryParams: function (params) {
                     var temp = { //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
                         limit: params.limit, //页面大小
@@ -209,7 +168,7 @@
         oTableInit.Init = function (data) {
             $('#listAssemble').bootstrapTable("destroy");
             $('#listAssemble').bootstrapTable({
-                url: '/Cargo/AssLogWeight', //请求后台的URL（*）
+                url: '/CargoLog/AssLogWeight', //请求后台的URL（*）
                 method: 'Post', //请求方式（*）
                 toolbar: '#toolbar', //工具按钮用哪个容器
                 striped: true, //是否显示行间隔色
@@ -236,27 +195,27 @@
                 detailView: false, //是否显示父子表
                 columns: [
                     {
-                        field: 'CargoName',
+                        field: 'HuomName',
                         title: '产品'
                     },
+                    {
+                        field: 'IsIncome',
+                        title: '出入状态',
+                        formatter: function (value, row, index) {
+                            if (row.IsIncome === true) {
+                                return '入库';
+                            }
+                            else {
+                                return '出库';
+                            }
+                        }
+                    }, 
                     {
                         field: 'Weight',
                         title: '重量'
                     },
 
                 ],
-
-                rowStyle: function (row, index) {
-                    var classesArr = ['success', 'info'];
-                    var rowStyle;
-                    if (index % 2 === 0) { //偶数行
-                        rowStyle = classesArr[0];
-                    } else { //奇数行
-                        rowStyle = classesArr[1];
-                    }
-                    return { classes: rowStyle };
-                }, //隔行变色
-
 
                 queryParams: function (params) {
                     var temp = { //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
@@ -276,6 +235,81 @@
                 }
 
             });
+        };
+        return oTableInit;
+        };
+
+    var TableInitInOutAssemble = function () {
+            var oTableInit = new Object();
+            //初始化Table
+            oTableInit.Init = function (data) {
+                $('#listInOutAssemble').bootstrapTable("destroy");
+                $('#listInOutAssemble').bootstrapTable({
+                    url: '/CargoLog/AssInOutLogWeight', //请求后台的URL（*）
+                    method: 'Post', //请求方式（*）
+                    toolbar: '#toolbar', //工具按钮用哪个容器
+                    striped: true, //是否显示行间隔色
+                    cache: true,
+                    pagination: true, //是否显示分页（*）
+                    sortable: true, //是否启用排序
+                    sortOrder: "asc", //排序方式
+
+                    sidePagination: "server", //分页方式：client客户端分页，server服务端分页（*）
+                    pageNumber: 1, //初始化加载第一页，默认第一页
+                    pageSize: 10, //每页的记录行数（*）
+                    pageList: [10, 25, 50, 100], //可供选择的每页的行数（*）
+                    //search: false,
+                    contentType: "application/x-www-form-urlencoded",
+                    strictSearch: true,
+                    showColumns: true, //是否显示所有的列
+                    showRefresh: true, //是否显示刷新按钮
+                    minimumCountColumns: 2, //最少允许的列数
+                    clickToSelect: true, //是否启用点击选中行
+                    height: 470, //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                    uniqueId: "ID", //每一行的唯一标识，一般为主键列
+                    showToggle: true, //是否显示详细视图和列表视图的切换按钮
+                    cardView: false, //是否显示详细视图
+                    detailView: false, //是否显示父子表
+                    columns: [
+                        {
+                            field: 'HuomName',
+                            title: '产品'
+                        },
+                        {
+                            field: 'IsIncome',
+                            title: '出入状态',
+                            formatter: function (value, row, index) {
+                                if (row.IsIncome === true) {
+                                    return '入库';
+                                }
+                                else {
+                                    return '出库';
+                                }
+                            }
+                        }, 
+                        {
+                            field: 'Weight',
+                            title: '重量'
+                        },
+
+                    ],
+                    queryParams: function (params) {
+                        var temp = { //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                            limit: params.limit, //页面大小
+                            offset: params.offset,
+                        @* id: @Model.Id,*@
+                        TimeStart: $("input[name='TimeStart']").val(),
+                            TimeEnd: $("input[name='TimeEnd']").val(),
+                                StateId: $("#StateId").val(),
+                                    HuotId: $("#HuotId").val(),
+                                        Huom2Id: $("#Huom2Id").val(),
+                                            sort: params.sort,
+                                                CargoId: $("#CargoId").val(),
+                                                    sortOrder: params.order //排位命令（desc，asc）
+                    };
+                    return temp;
+                }
+                });
         };
         return oTableInit;
     };
@@ -313,21 +347,7 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         <div class="form-group">
-            @*@Html.LabelFor(model => model.Id, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-2">
-                    <div class="input-group date col-md-12">
-                        @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Id, "", new { @class = "text-danger" })
-                    </div>
-                </div>*@
 
-            @*@Html.LabelFor(model => model.CargoName, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-3">
-                    <div class="input-group date col-md-9">
-                        @Html.EditorFor(model => model.CargoName, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.CargoName, "", new { @class = "text-danger" })
-                    </div>
-                </div>*@
             @Html.LabelFor(model => model.TimeStart, htmlAttributes: new { @class = "control-label col-md-1" })
             <div class="col-md-3">
                 <div class="input-group date col-md-12" id="TimeStart">
@@ -359,9 +379,10 @@
                 @Html.DropDownListFor(a => a.HuotId, (IEnumerable<SelectListItem>)ViewBag.HuotName, new { @class = "form-control" })
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <input type="button" value="查询" class="btn btn-default" id="submit" />
                 <input type="button" value="汇总" class="btn btn-default" id="assemble">
+                <input type="button" value="出入汇总" class="btn btn-default" id="inOutAssemble">
                 <input type="button" value="导出Excel" class="btn btn-default" id="Excel" />
             </div>
         </div>
@@ -390,3 +411,21 @@
     </div>
 </div>
 
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel2"></h4>
+            </div>
+            <div class="modal-body">
+                <table id="listInOutAssemble"></table>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-info" data-dismiss="modal" id="Excel"><span class="glyphicon" aria-hidden="true"></span>导出Excel</button>*@
+                <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
+                <button type="button" id="btn_submit" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>保存</button>
+            </div>
+        </div>
+    </div>
+</div>

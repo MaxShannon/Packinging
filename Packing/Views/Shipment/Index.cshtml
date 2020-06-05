@@ -118,8 +118,9 @@
                                     str += '<a class="btn btn-primary" href="/Cargo/Delete?id=' + row.Id + '">删除</a>';
                                 }
                             }*@
-                            if (@Model.HuotId != 0 && row.IsIncome) {
-                                str += '<a class="btn btn-info" href="/Shipment/Exchange?cargoAreaId=' + @Model.HuotId + '&cargoId=' +  @Model.CargoId + '&shipmentNo=' + row.ShipmentNo +'">转仓</a>';
+                            if (@Model.HuotId != 0 && row.FillList) {
+                                str += '<a class="btn btn-info" href="/Shipment/Exchange?huotId=' + @Model.HuotId + '&cargoId=' +  @Model.CargoId + '&shipmentNo=' + row.ShipmentNo + '">转仓</a>';
+                                str += '<a class="btn btn-info" href="/Shipment/Quality?huotId=' + @Model.HuotId + '&cargoId=' +  @Model.CargoId + '&shipmentNo=' + row.ShipmentNo +'">调整品质</a>';
                             }
 
                             if (row.CargoCount === 0) {
@@ -130,16 +131,6 @@
                     }
                 ],
 
-                rowStyle: function (row, index) {
-                    var classesArr = ['success', 'info'];
-                    var rowStyle;
-                    if (index % 2 === 0) { //偶数行
-                        rowStyle = classesArr[0];
-                    } else { //奇数行
-                        rowStyle = classesArr[1];
-                    }
-                    return { classes: rowStyle };
-                }, //隔行变色
 
                 queryParams: function (params) {
                     var temp = { //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的

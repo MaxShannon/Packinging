@@ -38,5 +38,8 @@ namespace Packing.Models
         public DateTime TimeEnd { get; set; }
 
         public int StateId { get; set; }
+
+        public int CargoOutOrderId { get; set; }
+        public bool IsChecked { get; set; }
     }
 }

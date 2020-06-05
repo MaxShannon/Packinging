@@ -38,7 +38,7 @@
                 alert("请选中一行");
             } else {
                 var b = JSON.stringify(a);
-                var url = "/Cargo/CargoOutOrdersConfirm";
+                var url = "/Cargo/SelfSellLogs";
                 $.ajax({
                     dataType: "json",
                     traditional: true,//这使json格式的字符不会被转码
@@ -68,15 +68,14 @@
 
     function confirmSelfSell() {
         var id = $('#cargoOutLogId').val()
-        var str = "/cargo/CargoOutOrderConfirm?id=" + id
-        //alert(str);
+        var str = "/cargo/SelfSellLog?id=" + id
         $.ajax({
             type: 'POST',
             url: str,
             //data: data,
             success: function(data) {
                 if (data.success === 'success') {
-                    window.location.href = '@Url.Action("ShipOrder")';
+                    window.location.href = '@Url.Action("SelfSell")';
                     alert(data.message);
                 }
                 if (data.success === 'fail') {
@@ -96,7 +95,7 @@
 
             $('#list').bootstrapTable("destroy");
             $('#list').bootstrapTable({
-                url: '@Url.Action("ShipOrder", "Cargo")', //请求后台的URL（*）
+                url: '@Url.Action("SelfSell","Cargo")', //请求后台的URL（*）
                 method: 'Post', //请求方式（*）
                 toolbar: '#toolbar', //工具按钮用哪个容器
                 striped: true, //是否显示行间隔色
@@ -128,7 +127,7 @@
                     },
                     {
                         visible: false,
-                        field: 'CargoOutOrderId',
+                        field: 'cargoOutOrderId',
                         title: 'Id'
                     },
                     {
@@ -143,7 +142,18 @@
                         field: 'WeightDu',
                         title: '产品重量'
                     },
-
+                    //{
+                    //    field: 'CargoCount',
+                    //    title: 'CargoCount'
+                    //},
+                    //{
+                    //    field: 'CargoInName',
+                    //    title: 'CargoInName'
+                    //},
+                    //{
+                    //    field: 'Type',
+                    //    title: '型号'
+                    //},
                     {
                         field: 'TopCargoName',
                         title: '上级产品'
@@ -163,12 +173,23 @@
                             var str = '';
                             if (row.IsChecked == false) {
                                 //str += '<a class="btn btn-info" href="/Cargo/SelfSellLog?id=' + row.cargoOutOrderId + '">自提出库</a>';
-                                str += '<input type="button" value="汽车出库" class="btn btn-info" id="' + row.cargoOutOrderId + '" onclick=clickButton(' + row.cargoOutOrderId +') ">'
+                                str += '<input type="button" value="自提出库" class="btn btn-info" id="' + row.cargoOutOrderId + '" onclick=clickButton(' + row.cargoOutOrderId +') ">'
                             }
                             return str;
                         } //自定义方法，添加操作按钮
                     }
                 ],
+
+                //rowStyle: function (row, index) {
+                //    var classesArr = ['success', 'info'];
+                //    var rowStyle;
+                //    if (index % 2 === 0) { //偶数行
+                //        rowStyle = classesArr[0];
+                //    } else { //奇数行
+                //        rowStyle = classesArr[1];
+                //    }
+                //    return { classes: rowStyle };
+                //}, //隔行变色
 
                 queryParams: function (params) {
                     var temp = { //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
@@ -203,6 +224,7 @@
     }*@
 
 
+
 <form id="form" class="form-horizontal" method="post">
     @Html.AntiForgeryToken()
     @Html.HiddenFor(a => a.Huom2Id)
@@ -233,13 +255,13 @@
             </div>
             <div class="col-md-4">
                 <input type="button" value="查询" class="btn btn-default" id="submit" />
-                <button id="btn_print" type="button" class="btn btn-primary"><span class="glyphicon"></span>一键出库</button>
+                <button id="btn_print" type="button" class="btn btn-primary"><span class="glyphicon"></span>一键自提</button>
                 <input type="button" value="汇总" class="btn btn-default" id="assemble">
                 @*<input type="button" value="导出Excel" class="btn btn-default" id="Excel" />*@
             </div>
         </div>
         <div class="form-group">
-            
+
         </div>
 
     </div>
@@ -249,7 +271,7 @@
 <table id="list"></table>
 
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
     <div class="modal-dialog" role="document" style="width: 200px">
         <div class="modal-content">
             <div class="modal-header">
@@ -257,7 +279,7 @@
                 <h4 class="modal-title" id="myModalLabel"></h4>
             </div>
             <div class="modal-body">
-                <input id="cargoOutLogId" hidden="hidden" />
+                <input id="cargoOutLogId" hidden="hidden"/>
             </div>
             <div class="modal-footer">
                 @*<button type="button" class="btn btn-info" data-dismiss="modal" id="Excel"><span class="glyphicon" aria-hidden="true"></span>导出Excel</button>*@

@@ -8,23 +8,19 @@ using System.Web.Mvc;
 
 namespace Packing.Controllers
 {
-    public class CargoAreaController : BaseController
+    public class HuotController : BaseController
     {
         private readonly jhglEntities _db = new jhglEntities();
         private readonly CargoService _cargoService;
 
-        public CargoAreaController()
+        public HuotController()
         {
-            var lxId = int.Parse(ConfigurationManager.AppSettings["FillList"]);
-            var lxId2 = int.Parse(ConfigurationManager.AppSettings["FillList2"]);
-            var lxCheckId = int.Parse(ConfigurationManager.AppSettings["LxCheckId"]);
-            CargoService cargoService = new CargoService(lxId, lxId2, lxCheckId);
+            CargoService cargoService = new CargoService();
             _cargoService = cargoService;
         }
         #region 展示产品
         public ActionResult Index()
         {
-            //ViewBag.PrivilegeId = LoginUser.PrivilegeId;
             return View();
         }
 
@@ -39,7 +35,7 @@ namespace Packing.Controllers
         #endregion
 
         #region 明细
-        public ActionResult Details(int? id) // cargoAreaId
+        public ActionResult Details(int? id) // huotId
         {
             var s = new States();
             var t1 = new SelectList(s.StateCargoList, "Id", "StateCargoName", 0).ToList();
@@ -55,10 +51,10 @@ namespace Packing.Controllers
         [HttpPost]
         public ActionResult Details1(CargoViewModel cargoViewModel, int? limit, int? offset)
         {
-            var temp = _cargoService.GetCargoShipmentHuot(cargoViewModel.HuotId, 0, LoginUser.pk);
+            var temp = _cargoService.GetCargoHuot(cargoViewModel.HuotId, LoginUser.pk);
 
             var list = temp.ToList();
-    
+
             return Json(new { total = list.Count, rows = list.OrderByDescending(c => c.Weight).Skip((int)offset).Take((int)limit).ToList() });
         }
         #endregion

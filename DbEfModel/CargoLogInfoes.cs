@@ -27,5 +27,6 @@ namespace DbEfModel
         public Nullable<bool> IsIncome { get; set; }
         public Nullable<int> Count { get; set; }
         public string WeightType { get; set; }
+        public string ShipmentNo { get; set; }
     }
 }

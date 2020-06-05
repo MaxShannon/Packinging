@@ -19,5 +19,6 @@ namespace DbEfModel
         public Nullable<int> sfyx { get; set; }
         public Nullable<int> huomid { get; set; }
         public string dxs { get; set; }
+        public string ph { get; set; }
     }
 }

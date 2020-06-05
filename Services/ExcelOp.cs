@@ -6,7 +6,7 @@ using DbEfModel;
 
 namespace Services
 {
-    public class Excel
+    public class ExcelOp
     {
        
 

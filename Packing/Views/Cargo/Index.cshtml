@@ -116,7 +116,7 @@
                                 str += '<a class="btn btn-info" href="/Cargo/StorageShippingCreate?id=' + row.Huom2Id + '">出库</a>';
                             }
 
-                            str += '<a class="btn btn-info" href="/Cargo/Details?id=' + row.Huom2Id + '">明细</a>';
+                            str += '<a class="btn btn-info" href="/CargoLog/Details?id=' + row.Huom2Id + '">明细</a>';
                             //str += '<a class="btn btn-info" href="/Shipment/Index?cargoId=' + row.Id + '">批号</a>';
                             if (row.CargoCount === 0) {
                                 //str += '<a class="btn btn-warning" href="Cargo/Delete?id=' + row.Id + '">删除</a>';
@@ -155,22 +155,10 @@
         return oTableInit;
     };
 
-
-
     </script>
 }
 
-
-
 <h2>@ViewBag.Title</h2>
-
-@*@if (ViewBag.PrivilegeId == 1 || ViewBag.PrivilegeId == 2)
-{
-    <p>
-        @Html.ActionLink("添加产品", "Create", "Cargo", null, new { @class = "btn btn-default" })
-    </p>
-}*@
-
 
 
 <form id="form" class="form-horizontal" method="post">
@@ -187,9 +175,10 @@
                     @Html.DropDownListFor(model => model.Huom2Id, (IEnumerable<SelectListItem>)ViewBag.CargoName, new { @class = "form-control" })
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-5">
                 <input type="button" value="查询" class="btn btn-default" id="submit" />
-                <a href="/Cargo/ShipOrder" class="btn btn-default">出库单</a>
+                <a href="@Url.Action("ShipOrder","Cargo")" class="btn btn-default">发货位汽车出库单</a>
+                <a href="@Url.Action("SelfSell","Cargo")" class="btn btn-default">自提出入库单</a>
                 @*<button class="btn btn-default" id="assemble">汇总</button>*@
                 @*<input type="button" value="导出日报" class="btn btn-primary" id="Excel" />*@
             </div>

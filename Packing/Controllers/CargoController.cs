@@ -1,11 +1,11 @@
 ﻿using DbEfModel;
+using Newtonsoft.Json;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using Packing.Models;
 using Services;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.Entity;
 using System.IO;
@@ -20,17 +20,18 @@ namespace Packing.Controllers
 {
     public class CargoController : BaseController
     {
+        private readonly Huom2Service _huom2Service;
         private readonly jhglEntities _db = new jhglEntities();
         private readonly ZDCZ_SLEntities _dbd = new ZDCZ_SLEntities();
         private readonly CargoService _cargoService;
+        private readonly CargoLogService _cargoLogService;
 
         public CargoController()
         {
-            var lxId = int.Parse(ConfigurationManager.AppSettings["FillList"]);
-            var lxId2 = int.Parse(ConfigurationManager.AppSettings["FillList2"]);
-            var lxCheckId = int.Parse(ConfigurationManager.AppSettings["LxCheckId"]);
-            var cargoService = new CargoService(lxId, lxId2, lxCheckId);
+            var cargoService = new CargoService();
             _cargoService = cargoService;
+            _huom2Service = new Huom2Service();
+            _cargoLogService = new CargoLogService();
         }
         #region 展示产品
         public ActionResult Index()
@@ -49,38 +50,10 @@ namespace Packing.Controllers
 
             if (!cargoViewModel.CargoName.IsEmpty())
             {
-             
+
             }
             var list = temp.OrderByDescending(c => c.CargoId).ToList();
             return Json(new { total = list.Count, rows = list.Skip(offset).Take(limit).ToList() });
-        }
-        #endregion
-
-        #region 明细
-        public ActionResult Details(int? id)
-        {
-            var s = new States();
-            var t1 = new SelectList(s.StateCargoList, "Id", "StateCargoName", 0).ToList();
-            ViewBag.StateList = t1;
-            ViewBag.HuotName = new SelectList(_cargoService.GetUserHuot(LoginUser.pk), "HuotId", "HuotName", 0).ToList();
-
-            CargoViewModel cargo = new CargoViewModel();
-            cargo.Huom2Id = id ?? 0;
-            cargo.TimeStart = DateTime.Now.AddDays(-1);
-            cargo.TimeEnd = DateTime.Now.AddHours(1);
-            return View(cargo);
-        }
-
-        [HttpPost]
-        public ActionResult Details1(CargoViewModel cargoViewModel, int? limit, int? offset)
-        {
-            _cargoService.CheckCargo(cargoViewModel.Huom2Id);
-            var temp = _cargoService.GetCargoLog(cargoViewModel.Huom2Id, 2, cargoViewModel.TimeStart, cargoViewModel.TimeEnd, LoginUser.pk, cargoViewModel.StateId, cargoViewModel.HuotId);
-
-            var list = temp.ToList();
-
-
-            return Json(new { total = list.Count, rows = list.OrderByDescending(c => c.CargoId).Skip((int)offset).Take((int)limit).ToList() });
         }
         #endregion
 
@@ -90,11 +63,14 @@ namespace Packing.Controllers
             return View();
         }
 
-        public ActionResult StorageIncomingCreate(int id, int? cargoAreaId)
+        [HttpGet]
+        public ActionResult StorageIncomingCreate(int id, int? huot)
         {
+            var huom2 = _huom2Service.GetHuom2(id);
             var model = new CargoViewModel()
             {
-                Huom2Id = id
+                Huom2Id = id,
+                CargoName = huom2.name
             };
             var shipmentList = _cargoService.GetShipment(id);
             var huotList = _cargoService.GetUserHuot(LoginUser.pk);
@@ -154,15 +130,17 @@ namespace Packing.Controllers
         }
 
 
-        public ActionResult StorageShippingCreate(int id, int? cargoAreaId)
+        public ActionResult StorageShippingCreate(int id, int? huot)
         {
+            var huom2 = _huom2Service.GetHuom2(id);
             var model = new CargoViewModel()
             {
                 Huom2Id = id,
+                CargoName = huom2.name
             };
             var huotList = _cargoService.GetUserHuot(LoginUser.pk);
             ViewBag.HuotName = new SelectList(huotList, "HuotId", "HuotName", 1);
-          
+
             ViewBag.CargoInName = new SelectList(_db.CargoInInfoes, "Id", "CargoInName", 3);
             var huotShipment = _cargoService.GetHuotShipments((int)LoginUser.htid, id);
             ViewBag.CargoShipmentNo = new SelectList(huotShipment, "ShipmentId", "ShipmentNo", 3);
@@ -185,7 +163,7 @@ namespace Packing.Controllers
                 return Json(new { success = "fail", message = "请重新登陆" });
             }
 
-            cargoViewModel.CargoInId = 2; // 汽车
+            cargoViewModel.CargoInId = 1; // 火车
 
             var ok = _cargoService.AddCargoShipLog(cargoViewModel.Huom2Id, cargoViewModel.HuotId, cargoViewModel.ShipmentId, cargoViewModel.ChangeWeight, cargoViewModel.CargoInId, LoginUser.name);
 
@@ -195,96 +173,109 @@ namespace Packing.Controllers
 
         #endregion
 
-        #region 审核
-
-        public ActionResult Audit()
-        {
-            var s = new States();
-            var t1 = new SelectList(s.StateList, "Id", "StateName", 0).ToList();
-            ViewBag.StateList = t1;
-            var cargoViewModel = new CargoViewModel();
-            cargoViewModel.TimeStart = DateTime.Now.AddDays(-1);
-            cargoViewModel.TimeEnd = DateTime.Now.AddHours(1);
-            return View(cargoViewModel);
-        }
-
-        [HttpPost]
-        public ActionResult Audit(CargoViewModel cargoViewModel, int limit, int offset)
-        {
-            var temp = _cargoService.GetCargoLog(0, cargoViewModel.StateId, cargoViewModel.TimeStart, cargoViewModel.TimeEnd, LoginUser.pk, 0, 0);
-            var list = temp.OrderByDescending(c => c.CargoId).ToList();
-            return Json(new { total = list.Count, rows = list.Skip(offset).Take(limit).ToList() });
-        }
-        #endregion
-
         #region 杜姐
         public ActionResult ShipOrder()
         {
-            return View();
+            CargoViewModel cargo = new CargoViewModel();
+            cargo.TimeStart = DateTime.Today.AddHours(-6);
+            cargo.TimeEnd = DateTime.Today.AddHours(18);
+            return View(cargo);
         }
         [HttpPost]
         public ActionResult ShipOrder(CargoViewModel cargoViewModel, int limit, int offset)
         {
-            var temp = _cargoService.GetCargoOutShipment(cargoViewModel.HuotId, LoginUser.pk);
-            var list = temp.OrderBy(a => a.IsChecked).ThenByDescending(c => c.cargoOutOrderId).ToList();
+            var temp = _cargoService.GetCargoOutShipment(LoginUser.pk);
+            var list = temp.OrderBy(a => a.IsChecked).ThenByDescending(c => c.CargoOutOrderId).ToList();
             return Json(new { total = list.Count, rows = list.Skip(offset).Take(limit).ToList() });
         }
 
-
-        public ActionResult CargoOutOrderConfirm(int id)
+        [HttpPost]
+        public ActionResult CargoOutOrdersConfirm(string datalist)
         {
-            var model = _dbd.pihao.FirstOrDefault(a => a.ID == id);
-            var huot = _db.huot.FirstOrDefault(a => a.id == model.HuotId);
-            CargoViewModel cargoViewModel = new CargoViewModel();
-            cargoViewModel.HuotId = (int)model.HuotId;
-            cargoViewModel.HuotName = huot.name;
-            cargoViewModel.ShipmentNo = model.PH_NO;
-            cargoViewModel.ChangeWeight = (decimal)model.PH_ZL;
-            cargoViewModel.cargoOutOrderId = id;
-            return View(cargoViewModel);
+            var entitys = JsonConvert.DeserializeObject<List<ProductionOrderViewModel>>(datalist);
+
+            using (var tran = _db.Database.BeginTransaction())
+            {
+                foreach (var item in entitys)
+                {
+                    if (item.IsOk == false)
+                    {
+                        var name = item.FlowNodeName;
+                        return Json(new { success = "fail", message = name + ",没有权限" });
+                    }
+                    item.Pass = true; //pass
+                    if (!item.IsChecked && !_cargoService.ConfirmCargoOutOrder(item.CargoOutOrderId, LoginUser.pk))
+                    {
+                        tran.Rollback();
+                        return Json(new { success = "fail", message = "失败" });
+                    }
+
+                }
+            }
+
+            return _db.SaveChanges() > 0 ? Json(new { success = "success", message = "成功" }) : Json(new { success = "fail", message = "失败" });
         }
 
         [HttpPost]
-        public ActionResult CargoOutOrderConfirm(CargoViewModel cargoViewModel)
+        public ActionResult CargoOutOrderConfirm(int id)
         {
-            var ok = _cargoService.ConfirmCargoOutOrder(cargoViewModel.cargoOutOrderId, LoginUser.pk);
-            return ok ? Json(new { success = "success", message = "添加产品出库成功" }) : Json(new { success = "fail", message = "失败" });
+            var ok = _cargoService.ConfirmCargoOutOrder(id, LoginUser.pk);
+            return ok ? Json(new { success = "success", message = "添加产品出库成功" }) : Json(new { success = "fail", message = "失败,库存不足" });
         }
         #endregion
 
-
-        [HttpPost]
-        public ActionResult AssLogWeight(CargoViewModel cargoViewModel, int? limit, int? offset)
+        #region 自提出库单
+        public ActionResult SelfSell()
         {
-            var tmp = _cargoService.GetCargoLog(cargoViewModel.Huom2Id, 2, cargoViewModel.TimeStart, cargoViewModel.TimeEnd, LoginUser.pk, cargoViewModel.StateId, cargoViewModel.HuotId);
-
-            var temp = (from modelList in tmp
-                select new
-                {
-                    modelList.Huom2Id,
-                    modelList.CargoName,
-                    Weight = modelList.IsIncome == false ? (0 - modelList.ChangeWeight) : modelList.ChangeWeight
-                });
-
-            var list = (from model in temp
-                group model by new
-                {
-                    model.Huom2Id,
-                    model.CargoName,
-                }
-                into g
-                select new
-                {
-                    g.Key.Huom2Id,
-                    g.Key.CargoName,
-                    Weight = g.Sum(a => a.Weight)
-                });
-
-            return Json(new { total = list.Count(), rows = list.OrderByDescending(c => c.Huom2Id).Skip((int)offset).Take((int)limit).ToList() });
-
+            CargoViewModel cargo = new CargoViewModel();
+            cargo.TimeStart = DateTime.Today.AddHours(-6);
+            cargo.TimeEnd = DateTime.Today.AddHours(18);
+            return View(cargo);
+        }
+        [HttpPost]
+        public ActionResult SelfSell(CargoViewModel cargoViewModel, int limit, int offset)
+        {
+            var temp = _cargoService.GetSelfSellLog(LoginUser.pk);
+            var list = temp.OrderBy(a => a.IsChecked).ThenByDescending(c => c.CargoOutOrderId).ToList();
+            return Json(new { total = list.Count, rows = list.Skip(offset).Take(limit).ToList() });
         }
 
+        [HttpPost]
+        public ActionResult SelfSellLog(int id) // cargoOutOrderid
+        {
+            var ok = _cargoService.SelfSellOut(id, LoginUser.pk);
+            return ok ? Json(new { success = "success", message = "添加产品自提成功" }) : Json(new { success = "fail", message = "失败" });
+        }
 
+        [HttpPost]
+        public ActionResult SelfSellLogs(string datalist)
+        {
+            var entitys = JsonConvert.DeserializeObject<List<ProductionOrderViewModel>>(datalist);
+
+            using (var tran = _db.Database.BeginTransaction())
+            {
+                foreach (var item in entitys)
+                {
+                    if (item.IsOk == false)
+                    {
+                        var name = item.FlowNodeName;
+                        return Json(new { success = "fail", message = name + ",没有权限" });
+                    }
+                    item.Pass = true; //pass
+                    if (!item.IsChecked && !_cargoService.SelfSellOut(item.CargoOutOrderId, LoginUser.pk))
+                    {
+                        tran.Rollback();
+                        return Json(new { success = "fail", message = "失败" });
+                    }
+
+                }
+            }
+
+            return _db.SaveChanges() > 0 ? Json(new { success = "success", message = "成功" }) : Json(new { success = "fail", message = "失败" });
+        }
+        #endregion
+
+        
         public string Excel(CargoViewModel cargoViewModel)
         {
             var temp = _cargoService.GetCargoLog(cargoViewModel.Huom2Id, 2, cargoViewModel.TimeStart, cargoViewModel.TimeEnd, LoginUser.pk, cargoViewModel.StateId, cargoViewModel.HuotId);
@@ -350,5 +341,5 @@ namespace Packing.Controllers
 
     }
 
-  
+
 }

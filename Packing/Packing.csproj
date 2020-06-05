@@ -53,7 +53,16 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Package\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.1\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=3.1.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.3.1.4\lib\net461\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=3.1.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.3.1.4\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="NPOI">
       <HintPath>..\..\..\lxr\BV\ShowTemperature\packages\NPOI.dll</HintPath>
     </Reference>
@@ -69,6 +78,12 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -142,11 +157,10 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AuditController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\CargoAreaController.cs" />
+    <Compile Include="Controllers\HuotController.cs" />
     <Compile Include="Controllers\CargoController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\CargoLogController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
-    <Compile Include="Controllers\ProductionOrderController.cs" />
     <Compile Include="Controllers\ShipmentController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -253,7 +267,7 @@
     <Content Include="Views\Cargo\Back.cshtml" />
     <Content Include="Views\Cargo\Create.cshtml" />
     <Content Include="Views\Cargo\Delete.cshtml" />
-    <Content Include="Views\Cargo\Details.cshtml" />
+    <Content Include="Views\CargoLog\Details.cshtml" />
     <Content Include="Views\Cargo\Edit.cshtml" />
     <Content Include="Views\Cargo\EditStorageShipping.cshtml" />
     <Content Include="Views\Cargo\Index.cshtml" />
@@ -265,13 +279,13 @@
     <Content Include="Views\Cargo\StorageShippingCreate.cshtml" />
     <Content Include="Views\Shipment\Index.cshtml" />
     <Content Include="Views\Cargo\AssLogWeight.cshtml" />
-    <Content Include="Views\CargoArea\Index.cshtml" />
-    <Content Include="Views\CargoArea\Details.cshtml" />
+    <Content Include="Views\Huot\Index.cshtml" />
+    <Content Include="Views\Huot\Details.cshtml" />
     <Content Include="Views\Shipment\Exchange.cshtml" />
     <Content Include="Views\Dept\Delete.cshtml" />
     <Content Include="Views\Dept\Edit.cshtml" />
     <Content Include="Views\Dept\Add.cshtml" />
-    <Content Include="Views\Cargo\Audit.cshtml" />
+    <Content Include="Views\Audit\Audit.cshtml" />
     <Content Include="Views\Cargo\ShipOrder.cshtml" />
     <Content Include="Views\Cargo\CargoOutOrderConfirm.cshtml" />
     <Content Include="Views\Home\Select.cshtml" />
@@ -282,6 +296,8 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
+    <Content Include="Views\Cargo\SelfSell.cshtml" />
+    <Content Include="Views\Shipment\Quality.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

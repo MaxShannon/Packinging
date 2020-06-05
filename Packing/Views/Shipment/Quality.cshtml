@@ -1,6 +1,6 @@
 ﻿@model DbEfModel.CargoViewModel
 @{
-    ViewBag.Title = "转移批次";
+    ViewBag.Title = "调整品质";
 }
 
 @section Scripts {
@@ -11,7 +11,7 @@
 
             $('#submit').click(function () {
                 $.ajax({
-                    url: '@Url.Action("Exchange")',
+                    url: '@Url.Action("Quality")',
                     type: "Post",
                     data: $('#form').serialize(),
                     success: function(data) {
@@ -49,10 +49,7 @@
     {
         @Html.HiddenFor(a => a.HuotId)
     }
-    @*@if (Model.Id != 0)
-        {
-            @Html.HiddenFor(a => a.Id)
-        }*@
+    @Html.HiddenFor(a => a.CargoId)
     <div class="form-horizontal">
         <h4>产品信息</h4>
         <hr />
@@ -66,16 +63,9 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(m => m.Weight, new { @class = "col-md-2 control-label" })
+            @Html.LabelFor(m => m.Huom2Id, new { @class = "col-md-2 control-label" })
             <div class="col-md-10">
-                @Html.EditorFor(m => m.Weight, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(m => m.NewHuotId, new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.NewHuotId, (IEnumerable<SelectListItem>)ViewBag.HuotName, new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.Huom2Id, (IEnumerable<SelectListItem>)ViewBag.HuomName, new { @class = "form-control" })
             </div>
         </div>
 

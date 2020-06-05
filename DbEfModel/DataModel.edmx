@@ -49,6 +49,7 @@
           <Property Name="IsIncome" Type="bit" />
           <Property Name="Count" Type="int" />
           <Property Name="WeightType" Type="nvarchar(max)" />
+          <Property Name="ShipmentNo" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="CargoOutOrderInfoes">
           <Key>
@@ -154,6 +155,7 @@
           <Property Name="sfyx" Type="int" />
           <Property Name="huomid" Type="int" />
           <Property Name="dxs" Type="varchar" MaxLength="10" />
+          <Property Name="ph" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="huot">
           <Key>
@@ -193,7 +195,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="HuotId" Type="int" Nullable="false" />
           <Property Name="ShipmentId" Type="int" Nullable="false" />
-          <Property Name="Weight" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Weight" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="HuotName" Type="nchar" MaxLength="50" />
           <Property Name="ShipmentNo" Type="nchar" MaxLength="50" />
         </EntityType>
@@ -410,9 +412,9 @@
           <EntitySet Name="ShipmentView" EntityType="jhglModel1.ShipmentView" />
           <EntitySet Name="CargoInfoes" EntityType="jhglModel1.CargoInfoes" />
           <EntitySet Name="CargoHuotInfoes" EntityType="jhglModel1.CargoHuotInfoes" />
-          <EntitySet Name="ShipmentHuotInfoes" EntityType="jhglModel1.ShipmentHuotInfoes" />
           <EntitySet Name="ShipmentInfoes" EntityType="jhglModel1.ShipmentInfoes" />
           <EntitySet Name="webdddl" EntityType="jhglModel1.webdddl" />
+          <EntitySet Name="ShipmentHuotInfoes" EntityType="jhglModel1.ShipmentHuotInfoes" />
           <EntitySet Name="CargoLogInfoes" EntityType="jhglModel1.CargoLogInfoes" />
         </EntityContainer>
         <EntityType Name="CargoInInfoes">
@@ -526,6 +528,7 @@
           <Property Name="sfyx" Type="Int32" />
           <Property Name="huomid" Type="Int32" />
           <Property Name="dxs" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="ph" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="huot">
           <Key>
@@ -676,17 +679,6 @@
           <Property Name="CargoName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
           <Property Name="HuotName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
         </EntityType>
-        <EntityType Name="ShipmentHuotInfoes">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="HuotId" Type="Int32" Nullable="false" />
-          <Property Name="ShipmentId" Type="Int32" Nullable="false" />
-          <Property Name="Weight" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="HuotName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
-          <Property Name="ShipmentNo" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
-        </EntityType>
         <EntityType Name="ShipmentInfoes">
           <Key>
             <PropertyRef Name="Id" />
@@ -705,6 +697,17 @@
           <Property Name="c_ry" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="n_time" Type="Int64" />
         </EntityType>
+        <EntityType Name="ShipmentHuotInfoes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="HuotId" Type="Int32" Nullable="false" />
+          <Property Name="ShipmentId" Type="Int32" Nullable="false" />
+          <Property Name="Weight" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="HuotName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="ShipmentNo" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+        </EntityType>
         <EntityType Name="CargoLogInfoes">
           <Key>
             <PropertyRef Name="Id" />
@@ -722,6 +725,7 @@
           <Property Name="IsIncome" Type="Boolean" />
           <Property Name="Count" Type="Int32" />
           <Property Name="WeightType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ShipmentNo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -839,6 +843,7 @@
           <EntitySetMapping Name="huom2">
             <EntityTypeMapping TypeName="jhglModel1.huom2">
               <MappingFragment StoreEntitySet="huom2">
+                <ScalarProperty Name="ph" ColumnName="ph" />
                 <ScalarProperty Name="dxs" ColumnName="dxs" />
                 <ScalarProperty Name="huomid" ColumnName="huomid" />
                 <ScalarProperty Name="sfyx" ColumnName="sfyx" />
@@ -999,18 +1004,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ShipmentHuotInfoes">
-            <EntityTypeMapping TypeName="jhglModel1.ShipmentHuotInfoes">
-              <MappingFragment StoreEntitySet="ShipmentHuotInfoes">
-                <ScalarProperty Name="ShipmentNo" ColumnName="ShipmentNo" />
-                <ScalarProperty Name="HuotName" ColumnName="HuotName" />
-                <ScalarProperty Name="Weight" ColumnName="Weight" />
-                <ScalarProperty Name="ShipmentId" ColumnName="ShipmentId" />
-                <ScalarProperty Name="HuotId" ColumnName="HuotId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ShipmentInfoes">
             <EntityTypeMapping TypeName="jhglModel1.ShipmentInfoes">
               <MappingFragment StoreEntitySet="ShipmentInfoes">
@@ -1031,9 +1024,22 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="ShipmentHuotInfoes">
+            <EntityTypeMapping TypeName="jhglModel1.ShipmentHuotInfoes">
+              <MappingFragment StoreEntitySet="ShipmentHuotInfoes">
+                <ScalarProperty Name="ShipmentNo" ColumnName="ShipmentNo" />
+                <ScalarProperty Name="HuotName" ColumnName="HuotName" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="ShipmentId" ColumnName="ShipmentId" />
+                <ScalarProperty Name="HuotId" ColumnName="HuotId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="CargoLogInfoes">
             <EntityTypeMapping TypeName="jhglModel1.CargoLogInfoes">
               <MappingFragment StoreEntitySet="CargoLogInfoes">
+                <ScalarProperty Name="ShipmentNo" ColumnName="ShipmentNo" />
                 <ScalarProperty Name="WeightType" ColumnName="WeightType" />
                 <ScalarProperty Name="Count" ColumnName="Count" />
                 <ScalarProperty Name="IsIncome" ColumnName="IsIncome" />

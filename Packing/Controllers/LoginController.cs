@@ -40,6 +40,7 @@ namespace Packing.Controllers
         [HttpGet]
         public ActionResult PkLogin()
         {
+            
             var userInfoNew = _db.sys_ry.Find(_userPk);
             if (JudgeLoger(userInfoNew))
             {

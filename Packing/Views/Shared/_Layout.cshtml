@@ -27,13 +27,13 @@
                         @*<li>@Html.ActionLink("人员管理", "Index", "Account")</li>
                         <li>@Html.ActionLink("部门管理", "Index", "Dept")</li>*@
 
-                        <li><a href="/Cargo/Audit">审核</a> @*@Html.ActionLink("", "Index", "ProductionOrder",new{ flowId = 1})*@</li>
+                        <li><a href="/Audit/Audit">审核</a> @*@Html.ActionLink("", "Index", "ProductionOrder",new{ flowId = 1})*@</li>
                     }
                     <li>@Html.ActionLink("产品", "Index", "Cargo")</li>
                     @*<li>@Html.ActionLink("库存", "StorageIncoming", "Cargo")</li>*@
                     @*<li>@Html.ActionLink("批号", "Index", "Shipment")</li>*@
-                    <li>@Html.ActionLink("记录", "Details", "Cargo")</li>
-                    <li>@Html.ActionLink("仓库", "Index", "CargoArea")</li>
+                    <li>@Html.ActionLink("记录", "Details", "CargoLog")</li>
+                    <li>@Html.ActionLink("仓库", "Index", "Huot")</li>
                 </ul>
                 @if (Session["LoginUser"] != null)
                 {
